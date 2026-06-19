@@ -1,4 +1,4 @@
-# Penjualan Item — Chicken Day Ampel
+# Penjualan Item — CD
 
 Webapp client-side (PWA, local-first) untuk input penjualan per item, rekonsiliasi dengan struk harian Casio, dan export Excel untuk dikirim ke pusat.
 
