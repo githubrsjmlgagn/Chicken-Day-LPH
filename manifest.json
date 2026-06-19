@@ -1,0 +1,14 @@
+{
+  "name": "Penjualan Chicken Day",
+  "short_name": "Penjualan CD",
+  "description": "Input penjualan per item, rekonsiliasi struk harian, export Excel",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7A1E1E",
+  "theme_color": "#7A1E1E",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
