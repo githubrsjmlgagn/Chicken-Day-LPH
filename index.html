@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#7A1E1E">
-<title>Penjualan Chicken Day</title>
+<title>Chicken Day</title>
 <link rel="manifest" href="manifest.json">
 <style>
 :root{--merah:#7A1E1E;--merah2:#9a2a2a;--emas:#D9A116;--bg:#f4f1ec;--card:#fff;--teks:#2b2b2b;--abu:#6f6f6f;--garis:#e3ddd3;--hijau:#1d7a4d;--merahx:#c0392b;}
@@ -60,7 +60,7 @@ input,select,button{font-family:inherit;font-size:15px;}
 .trx .tt{display:flex;justify-content:space-between;margin-top:6px;font-weight:700;}
 .trx .tt b{color:var(--merah);}
 .trx .hapus{background:none;border:none;color:var(--merahx);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
-/* rekonsiliasi */
+/* Pencocokan */
 .kartu{background:var(--card);border:1px solid var(--garis);border-radius:12px;padding:14px;margin-bottom:12px;}
 .kartu h3{margin:0 0 10px;font-size:15px;color:var(--merah);}
 .baris{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--garis);}
@@ -87,8 +87,8 @@ input,select,button{font-family:inherit;font-size:15px;}
 <body>
 <header>
   <div>
-    <div class="judul">Penjualan Chicken Day</div>
-    <div class="tgl">Laporan Harian</div>
+    <div class="judul">Chicken Day</div>
+    <div class="tgl">Input Penjualan</div>
   </div>
   <div class="saldo">
     <input type="date" id="tglHari" class="tglpick">
@@ -98,7 +98,7 @@ input,select,button{font-family:inherit;font-size:15px;}
 <div class="tabs">
   <button id="tabInput" class="aktif" onclick="ganti('input')">Input</button>
   <button id="tabTrx" onclick="ganti('trx')">Transaksi <span id="trxCount"></span></button>
-  <button id="tabRekap" onclick="ganti('rekap')">Rekonsiliasi</button>
+  <button id="tabRekap" onclick="ganti('rekap')">Pencocokan</button>
 </div>
 
 <main>
@@ -133,7 +133,7 @@ input,select,button{font-family:inherit;font-size:15px;}
     <div class="kosong" id="trxKosong">Belum ada transaksi hari ini.</div>
   </section>
 
-  <!-- ===== TAB REKONSILIASI ===== -->
+  <!-- ===== TAB PENCOCOKAN ===== -->
   <section id="vRekap" class="hidden">
     <div class="kartu">
       <h3>Angka dari aplikasi</h3>
@@ -145,11 +145,11 @@ input,select,button{font-family:inherit;font-size:15px;}
       <h3>Angka dari struk</h3>
       <div class="field">
         <label>Total di struk</label>
-        <input type="number" id="inOmzet" inputmode="numeric" placeholder="mis. 3303500" oninput="hitungCocok()">
+        <input type="number" id="inOmzet" inputmode="numeric" placeholder="Rp." oninput="hitungCocok()">
       </div>
       <div class="field">
         <label>Jumlah item di struk</label>
-        <input type="number" id="inItem" inputmode="numeric" placeholder="mis. 243" oninput="hitungCocok()">
+        <input type="number" id="inItem" inputmode="numeric" placeholder="Rp." oninput="hitungCocok()">
       </div>
       <div id="hasilCocok" class="cocok netral">Isi kedua angka dari struk</div>
       <div class="kecil" id="selisihDetail"></div>
@@ -263,7 +263,7 @@ function hapusTrx(i){if(!confirm('Hapus nota #'+(i+1)+'?'))return;state.trx.spli
 function totalOmzet(){return state.trx.reduce((s,t)=>s+t.total,0);}
 function totalItem(){return state.trx.reduce((s,t)=>s+t.items.reduce((a,x)=>a+x.qty,0),0);}
 
-/* ---------- rekonsiliasi ---------- */
+/* ---------- Pencocokan ---------- */
 function renderRekap(){
   document.getElementById('rOmzetApp').textContent=rp(totalOmzet());
   document.getElementById('rItemApp').textContent=totalItem();
