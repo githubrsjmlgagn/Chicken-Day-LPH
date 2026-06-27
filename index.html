@@ -253,7 +253,7 @@ input,select,button{font-family:inherit;font-size:15px;}
       <div class="wa-no-wrap">
         <span>Nomor WA:</span>
         <b id="waNomorTampil">—</b>
-        <button class="wa-no-set" onclick="ganti('data');setTimeout(()=>document.getElementById('inputNomorWA').focus(),200)">Ubah</button>
+        <button class="wa-no-set" onclick="bukaPin('nomorWA')">Ubah</button>
       </div>
       <div class="wa-preview" id="waPreview">—</div>
       <button class="btn btn-wa" id="btnKirimWA" onclick="kirimWA()" disabled>
@@ -758,7 +758,9 @@ let pinBlokSampai=0;
 function getPIN(){return localStorage.getItem(PIN_KEY)||'';}
 function sudahAdaPIN(){return !!getPIN();}
 
-function bukaPin(){
+let pinTujuan=''; // tujuan setelah PIN berhasil: '' = data biasa, 'nomorWA' = fokus ke input nomor WA
+function bukaPin(tujuan){
+  pinTujuan=tujuan||'';
   pinBuffer='';pinCoba=0;
   if(!sudahAdaPIN()){
     pinMode='buat';
@@ -830,6 +832,7 @@ function prosesPIN(){
   } else if(pinMode==='buka'){
     if(pinBuffer===getPIN()){
       pinCoba=0;tutupPin();ganti('data');
+      if(pinTujuan==='nomorWA')setTimeout(()=>document.getElementById('inputNomorWA').focus(),200);
     } else {
       pinCoba++;
       renderPinSalah();
