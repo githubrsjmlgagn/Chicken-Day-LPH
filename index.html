@@ -222,7 +222,7 @@ input,select,button{font-family:inherit;font-size:15px;}
       <div class="bk-ikon">🔒</div>
       <div class="bk-teks">
         <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
-        <div class="bk-sub">Rekonsiliasi dan export ulang dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+        <div class="bk-sub">Pencocokan dan export ulang dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
       </div>
     </div>
     <div class="kartu">
@@ -514,7 +514,7 @@ function updateKunciUI(){
   // Konten input
   const inputKonten=document.getElementById('inputKonten');
   if(inputKonten)inputKonten.style.display=kunci?'none':'block';
-  // Input rekonsiliasi & export
+  // Input pencocokan & export
   const inOmzet=document.getElementById('inOmzet');
   const inItem=document.getElementById('inItem');
   if(inOmzet)inOmzet.disabled=kunci;
@@ -876,7 +876,7 @@ function cekStatusUnlock(){
 function konfirmasiUnlock(){
   const tgl=document.getElementById('unlockTgl').value;
   if(!tgl)return;
-  if(!confirm(`Buka kunci tanggal ${fmtTglPanjang(tgl)}?\n\nStatus export akan direset. Karyawan perlu rekonsiliasi & export ulang setelah selesai koreksi.`))return;
+  if(!confirm(`Buka kunci tanggal ${fmtTglPanjang(tgl)}?\n\nStatus export akan direset. Karyawan perlu mencocokan & export ulang setelah selesai koreksi.`))return;
   const s=getStateForDate(tgl);
   if(!s)return;
   s.exported=false;
