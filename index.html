@@ -7,18 +7,15 @@
 <title>Chicken Day</title>
 <link rel="manifest" href="manifest.json">
 <style>
-:root{--merah:#7A1E1E;--merah2:#9a2a2a;--emas:#D9A116;--bg:#f4f1ec;--card:#fff;--teks:#2b2b2b;--abu:#6f6f6f;--garis:#e3ddd3;--hijau:#1d7a4d;--merahx:#c0392b;}
+:root{--merah:#7A1E1E;--merah2:#9a2a2a;--emas:#D9A116;--bg:#f4f1ec;--card:#fff;--teks:#2b2b2b;--abu:#6f6f6f;--garis:#e3ddd3;--hijau:#1d7a4d;--merahx:#c0392b;--biru:#1a5fa8;--wa:#25D366;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--teks);font-size:15px;}
 .hidden{display:none!important;}
 header{background:var(--merah);color:#fff;padding:10px 14px;position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;}
 header .judul{font-weight:600;font-size:15px;line-height:1.2;}
 header .tgl{font-size:12px;color:#f0d9a8;}
-header .saldo{text-align:right;}
-header .saldo b{font-size:16px;color:var(--emas);}
-header .saldo span{display:block;font-size:11px;color:#f0d9a8;}
-.tabs{display:flex;background:var(--merah2);position:sticky;top:50px;z-index:19;}
-.tabs button{flex:1;background:none;border:none;color:#f0d9a8;padding:11px 4px;font-size:13px;font-weight:600;border-bottom:3px solid transparent;cursor:pointer;}
+.tabs{display:flex;background:var(--merah2);position:sticky;top:50px;z-index:19;overflow-x:auto;}
+.tabs button{flex:1;background:none;border:none;color:#f0d9a8;padding:11px 4px;font-size:12px;font-weight:600;border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap;min-width:0;}
 .tabs button.aktif{color:#fff;border-bottom-color:var(--emas);}
 main{padding:12px;max-width:560px;margin:0 auto;padding-bottom:90px;}
 .cari-wrap{position:sticky;top:90px;z-index:15;background:var(--bg);padding-bottom:8px;}
@@ -42,34 +39,41 @@ input,select,button{font-family:inherit;font-size:15px;}
 .krow:last-child{border-bottom:none;}
 .krow .knm{flex:1;font-size:13px;line-height:1.2;}
 .krow .ksub{font-size:11px;color:var(--abu);}
-.qtybox{display:flex;align-items:center;gap:0;border:1px solid var(--garis);border-radius:8px;overflow:hidden;}
+.qtybox{display:flex;align-items:center;border:1px solid var(--garis);border-radius:8px;overflow:hidden;}
 .qtybox button{width:32px;height:32px;border:none;background:#f4efe6;color:var(--merah);font-size:18px;font-weight:700;cursor:pointer;}
 .qtybox span{min-width:30px;text-align:center;font-weight:700;font-size:14px;}
 .krow .del{background:none;border:none;color:var(--merahx);font-size:18px;cursor:pointer;padding:4px;}
 .ktotal{display:flex;justify-content:space-between;align-items:center;margin-top:10px;font-weight:700;}
 .ktotal b{color:var(--merah);font-size:18px;}
-.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;}
-.btn-utama{background:var(--merah);color:#fff;margin-top:10px;}
-.btn-utama:disabled{background:#c9b8b8;}
+.btn{width:100%;padding:13px;border:none;border-radius:10px;font-weight:700;font-size:15px;cursor:pointer;margin-top:8px;}
+.btn-utama{background:var(--merah);color:#fff;}
+.btn-utama:disabled{background:#c9b8b8;cursor:not-allowed;}
 .btn-emas{background:var(--emas);color:#5a3d00;}
 .btn-garis{background:#fff;border:1px solid var(--garis);color:var(--teks);}
-/* transaksi list */
+.btn-hijau{background:var(--hijau);color:#fff;}
+.btn-biru{background:var(--biru);color:#fff;}
+.btn-wa{background:var(--wa);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-wa:disabled{background:#a8e6bf;cursor:not-allowed;}
+/* transaksi */
 .trx{background:var(--card);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
-.trx .th{display:flex;justify-content:space-between;font-size:12px;color:var(--abu);margin-bottom:4px;}
+.trx .th{display:flex;justify-content:space-between;font-size:12px;color:var(--abu);margin-bottom:4px;align-items:center;}
 .trx .ti{font-size:13px;line-height:1.4;}
 .trx .tt{display:flex;justify-content:space-between;margin-top:6px;font-weight:700;}
 .trx .tt b{color:var(--merah);}
+.trx-aksi{display:flex;gap:6px;}
 .trx .hapus{background:none;border:none;color:var(--merahx);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
+.trx .edit{background:none;border:none;color:var(--biru);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
 /* Pencocokan */
 .kartu{background:var(--card);border:1px solid var(--garis);border-radius:12px;padding:14px;margin-bottom:12px;}
-.kartu h3{margin:0 0 10px;font-size:15px;color:var(--merah);}
+.kartu h3{margin:0 0 10px;font-size:15px;color:var(--merah);display:flex;align-items:center;justify-content:space-between;}
 .baris{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--garis);}
 .baris:last-child{border-bottom:none;}
 .baris .lbl{font-size:13px;color:var(--abu);}
 .baris .val{font-weight:700;font-size:16px;}
 .field{margin:10px 0;}
 .field label{display:block;font-size:13px;color:var(--abu);margin-bottom:5px;}
-.field input{width:100%;padding:11px 12px;border:1px solid var(--garis);border-radius:9px;}
+.field input{width:100%;padding:11px 12px;border:1px solid var(--garis);border-radius:9px;outline:none;}
+.field input:focus{border-color:var(--emas);}
 .cocok{padding:10px 12px;border-radius:9px;font-weight:700;text-align:center;font-size:14px;margin-top:6px;}
 .cocok.ok{background:#e3f5ea;color:var(--hijau);}
 .cocok.beda{background:#fdeaea;color:var(--merahx);}
@@ -78,19 +82,53 @@ input,select,button{font-family:inherit;font-size:15px;}
 .stat{flex:1;background:var(--card);border:1px solid var(--garis);border-radius:10px;padding:10px;text-align:center;}
 .stat b{display:block;font-size:18px;color:var(--merah);}
 .stat span{font-size:11px;color:var(--abu);}
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:50;opacity:0;transition:opacity .25s;pointer-events:none;}
+/* WA kirim box */
+.wa-box{background:#f0faf4;border:1px solid #b2dfcc;border-radius:12px;padding:14px;margin-bottom:12px;}
+.wa-box h3{margin:0 0 8px;font-size:15px;color:var(--hijau);}
+.wa-preview{background:#fff;border:1px solid #b2dfcc;border-radius:8px;padding:10px 12px;font-size:13px;color:var(--teks);line-height:1.6;margin-bottom:10px;white-space:pre-wrap;word-break:break-word;}
+.wa-no-wrap{display:flex;gap:6px;align-items:center;margin-bottom:8px;}
+.wa-no-wrap span{font-size:12px;color:var(--abu);white-space:nowrap;}
+.wa-no-wrap b{font-size:13px;color:var(--teks);}
+.wa-no-set{background:none;border:none;color:var(--biru);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
+.wa-step{font-size:11px;color:var(--abu);line-height:1.6;margin-top:6px;}
+.wa-step b{color:var(--hijau);}
+/* status badge */
+.export-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;margin-left:6px;}
+.export-badge.sudah{background:#e3f5ea;color:var(--hijau);}
+.export-badge.belum{background:#fdeaea;color:var(--merahx);}
+/* toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 18px;border-radius:20px;font-size:13px;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;max-width:90%;text-align:center;}
 .toast.show{opacity:.95;}
 .tglpick{padding:6px 8px;border:1px solid #f0d9a8;background:rgba(255,255,255,.12);color:#fff;border-radius:7px;font-size:12px;}
 .kecil{font-size:11px;color:var(--abu);margin-top:4px;line-height:1.4;}
+/* modal edit */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;}
+.modal{background:#fff;border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;}
+.modal h3{margin:0 0 12px;font-size:16px;color:var(--merah);}
+.modal-footer{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--garis);}
+.modal-footer .btn{margin-top:0;}
+.edit-item-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px dashed var(--garis);}
+.edit-item-row:last-child{border-bottom:none;}
+.edit-item-nm{flex:1;font-size:13px;}
+.edit-item-hg{font-size:11px;color:var(--abu);}
+/* tab data */
+.data-section{background:var(--card);border:1px solid var(--garis);border-radius:12px;padding:14px;margin-bottom:12px;}
+.data-section h3{margin:0 0 10px;font-size:15px;color:var(--merah);}
+.data-section p{margin:0 0 10px;font-size:13px;color:var(--abu);line-height:1.5;}
+/* pengaturan */
+.set-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.set-row input{flex:1;padding:10px 12px;border:1px solid var(--garis);border-radius:8px;outline:none;font-size:14px;}
+.set-row input:focus{border-color:var(--emas);}
+.set-row .btn-sm{width:auto;padding:10px 16px;margin-top:0;font-size:13px;white-space:nowrap;}
 </style>
 </head>
 <body>
 <header>
   <div>
     <div class="judul">Chicken Day</div>
-    <div class="tgl">Input Penjualan</div>
+    <div class="tgl" id="headerStatusTgl">Input Penjualan</div>
   </div>
-  <div class="saldo">
+  <div>
     <input type="date" id="tglHari" class="tglpick">
   </div>
 </header>
@@ -99,10 +137,11 @@ input,select,button{font-family:inherit;font-size:15px;}
   <button id="tabInput" class="aktif" onclick="ganti('input')">Input</button>
   <button id="tabTrx" onclick="ganti('trx')">Transaksi <span id="trxCount"></span></button>
   <button id="tabRekap" onclick="ganti('rekap')">Pencocokan</button>
+  <button id="tabData" onclick="ganti('data')">Data</button>
 </div>
 
 <main>
-  <!-- ===== TAB INPUT ===== -->
+  <!-- TAB INPUT -->
   <section id="vInput">
     <div class="cari-wrap">
       <input class="cari" id="cari" placeholder="Cari menu…" autocomplete="off">
@@ -111,18 +150,16 @@ input,select,button{font-family:inherit;font-size:15px;}
         <button id="chOjol" onclick="setChannel(1)">Ojol (G)</button>
       </div>
     </div>
-
     <div class="keranjang" id="keranjangWrap" style="display:none">
       <h3>Nota berjalan</h3>
       <div id="keranjangList"></div>
       <div class="ktotal"><span>Total nota</span><b id="keranjangTotal">Rp 0</b></div>
-      <button class="btn btn-utama" id="btnSimpanNota" onclick="simpanNota()">Simpan nota ke transaksi</button>
+      <button class="btn btn-utama" onclick="simpanNota()">Simpan nota ke transaksi</button>
     </div>
-
     <div class="hasil" id="hasil"></div>
   </section>
 
-  <!-- ===== TAB TRANSAKSI ===== -->
+  <!-- TAB TRANSAKSI -->
   <section id="vTrx" class="hidden">
     <div class="statbar">
       <div class="stat"><b id="sTotalOmzet">Rp 0</b><span>Total</span></div>
@@ -133,14 +170,13 @@ input,select,button{font-family:inherit;font-size:15px;}
     <div class="kosong" id="trxKosong">Belum ada transaksi hari ini.</div>
   </section>
 
-  <!-- ===== TAB PENCOCOKAN ===== -->
+  <!-- TAB PENCOCOKAN -->
   <section id="vRekap" class="hidden">
     <div class="kartu">
       <h3>Angka dari aplikasi</h3>
       <div class="baris"><span class="lbl">Total</span><span class="val" id="rOmzetApp">Rp 0</span></div>
       <div class="baris"><span class="lbl">Jumlah item</span><span class="val" id="rItemApp">0</span></div>
     </div>
-
     <div class="kartu">
       <h3>Angka dari struk</h3>
       <div class="field">
@@ -155,40 +191,139 @@ input,select,button{font-family:inherit;font-size:15px;}
       <div class="kecil" id="selisihDetail"></div>
     </div>
 
-    <button class="btn btn-emas" id="btnExport" onclick="exportExcel()">Export Excel</button>
-    <button class="btn btn-garis" style="margin-top:8px" onclick="resetHari()">Reset data hari ini</button>
-    <div class="kecil" style="margin-top:10px">Cocokkan dulu kedua angka dengan struk harian sebelum export. Jika selisih, perbaiki input di tab Transaksi.</div>
+    <!-- Export Excel -->
+    <button class="btn btn-emas" id="btnExport" onclick="exportExcel()" style="margin-top:0">⬇ Export Excel</button>
+
+    <!-- Kirim WhatsApp -->
+    <div class="wa-box" id="waBox" style="margin-top:12px">
+      <h3>📤 Kirim ke Admin Pusat</h3>
+      <div class="wa-no-wrap">
+        <span>Nomor WA:</span>
+        <b id="waNomorTampil">—</b>
+        <button class="wa-no-set" onclick="ganti('data');setTimeout(()=>document.getElementById('inputNomorWA').focus(),200)">Ubah</button>
+      </div>
+      <div class="wa-preview" id="waPreview">—</div>
+      <button class="btn btn-wa" id="btnKirimWA" onclick="kirimWA()" disabled>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.856L.057 23.882a.5.5 0 0 0 .612.612l6.036-1.474A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.651-.522-5.163-1.43l-.364-.215-3.781.924.95-3.671-.236-.374A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        Buka WhatsApp
+      </button>
+      <div class="wa-step">
+        <b>Cara kirim file Excel:</b><br>
+        1. Tap <b>Export Excel</b> dulu → file terunduh<br>
+        2. Tap <b>Buka WhatsApp</b> → WA terbuka dengan pesan otomatis<br>
+        3. Attach file Excel dari unduhan → Kirim
+      </div>
+    </div>
+
+    <button class="btn btn-garis" style="margin-top:8px;border-color:#ddd" onclick="resetHari()">Reset data hari ini</button>
+    <div class="kecil" style="margin-top:8px">Cocokkan dulu kedua angka dengan struk harian sebelum export.</div>
+  </section>
+
+  <!-- TAB DATA -->
+  <section id="vData" class="hidden">
+
+    <div class="data-section">
+      <h3>📱 Nomor WA Admin Pusat</h3>
+      <p>Nomor ini digunakan untuk tombol kirim laporan di halaman Pencocokan. Format: angka saja tanpa tanda + atau strip, diawali kode negara.<br><small>Contoh: 6281234567890</small></p>
+      <div class="set-row">
+        <input type="tel" id="inputNomorWA" inputmode="numeric" placeholder="6281234567890">
+        <button class="btn btn-utama btn-sm" onclick="simpanNomorWA()">Simpan</button>
+      </div>
+      <div class="kecil" id="statusNomorWA"></div>
+    </div>
+
+    <div class="data-section">
+      <h3>💾 Backup Data</h3>
+      <p>Unduh seluruh data transaksi semua tanggal sebagai file .json. Simpan sebagai cadangan — bisa digunakan untuk restore jika data hilang.</p>
+      <button class="btn btn-hijau" onclick="backupJSON()">Unduh Backup (.json)</button>
+    </div>
+
+    <div class="data-section">
+      <h3>📂 Restore Data</h3>
+      <p>Muat data dari file backup .json. Data di-restore akan digabung dengan data yang sudah ada.</p>
+      <button class="btn btn-biru" onclick="document.getElementById('inputRestore').click()">Pilih File Backup (.json)</button>
+      <input type="file" id="inputRestore" accept=".json" style="display:none" onchange="restoreJSON(event)">
+    </div>
+
+    <div class="data-section">
+      <h3>🗑️ Hapus Semua Data</h3>
+      <p>Hapus <strong>seluruh</strong> data dari semua tanggal. Lakukan backup terlebih dahulu. Tidak bisa dibatalkan.</p>
+      <button class="btn btn-garis" style="border-color:var(--merahx);color:var(--merahx)" onclick="resetSemuaData()">Hapus Semua Data</button>
+    </div>
+
   </section>
 </main>
 
 <div class="toast" id="toast"></div>
 
+<!-- MODAL EDIT NOTA -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal">
+    <h3 id="modalJudul">Edit Nota</h3>
+    <div id="modalKonten"></div>
+    <div class="modal-footer">
+      <button class="btn btn-garis" style="margin-top:0" onclick="tutupModal()">Batal</button>
+      <button class="btn btn-utama" style="margin-top:0" onclick="simpanEdit()">Simpan Perubahan</button>
+    </div>
+  </div>
+</div>
+
 <script src="menu.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
 if(typeof MENU_DATA==='undefined'||!MENU_DATA||!MENU_DATA.items){
-  document.getElementById('hasil').innerHTML='<div class="kosong">Data menu gagal dimuat (menu.js). Pastikan file menu.js ada di folder yang sama, lalu muat ulang halaman (Ctrl+Shift+R).</div>';
+  document.getElementById('hasil').innerHTML='<div class="kosong">Data menu gagal dimuat (menu.js). Pastikan file menu.js ada di folder yang sama, lalu muat ulang halaman.</div>';
   throw new Error('MENU_DATA tidak tersedia');
 }
-const KAT = MENU_DATA.kategori;
-const ITEMS = MENU_DATA.items.map(a=>({id:a[0],nama:a[1],harga:a[2],ch:a[3],kat:KAT[a[4]]}));
-let channel = 0;        // 0=toko,1=ojol
-let keranjang = {};     // id -> {item, qty}
-let state = {tanggal:'', trx:[], struk:{omzet:'',item:''}};
+const KAT=MENU_DATA.kategori;
+const ITEMS=MENU_DATA.items.map(a=>({id:a[0],nama:a[1],harga:a[2],ch:a[3],kat:KAT[a[4]]}));
+let channel=0;
+let keranjang={};
+let state={tanggal:'',trx:[],struk:{omzet:'',item:''},exported:false};
+let editNotaIdx=null;
+let editKeranjang={};
 
+/* ---- utils ---- */
 function rp(n){return 'Rp '+(n||0).toLocaleString('id-ID');}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-function key(t){return 'cda_penjualan_'+t;}
-
-function load(tgl){
-  const raw = localStorage.getItem(key(tgl));
-  if(raw){try{state=JSON.parse(raw);}catch(e){state={tanggal:tgl,trx:[],struk:{omzet:'',item:''}};}}
-  else state={tanggal:tgl,trx:[],struk:{omzet:'',item:''}};
-  state.tanggal=tgl;
+function fmtTglPanjang(tgl){
+  const [y,m,d]=tgl.split('-');
+  const bln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  return `${+d} ${bln[+m-1]} ${y}`;
 }
-function save(){localStorage.setItem(key(state.tanggal), JSON.stringify(state));}
+function key(t){return 'cda_penjualan_'+t;}
+function getNomorWA(){return localStorage.getItem('cda_nomor_wa')||'';}
+function simpanNomorWA(){
+  const val=document.getElementById('inputNomorWA').value.trim().replace(/\D/g,'');
+  if(!val){toast('Nomor tidak boleh kosong');return;}
+  localStorage.setItem('cda_nomor_wa',val);
+  document.getElementById('statusNomorWA').textContent='✓ Tersimpan: '+val;
+  updateWASection();
+  toast('Nomor WA disimpan');
+}
 
-/* ---------- pencarian & render hasil ---------- */
+/* ---- state ---- */
+function load(tgl){
+  const raw=localStorage.getItem(key(tgl));
+  if(raw){try{state=JSON.parse(raw);}catch(e){state={tanggal:tgl,trx:[],struk:{omzet:'',item:''},exported:false};}}
+  else state={tanggal:tgl,trx:[],struk:{omzet:'',item:''},exported:false};
+  state.tanggal=tgl;
+  if(state.exported===undefined)state.exported=false;
+  updateStatusHeader();
+}
+function save(){localStorage.setItem(key(state.tanggal),JSON.stringify(state));}
+
+/* ---- header status ---- */
+function updateStatusHeader(){
+  const el=document.getElementById('headerStatusTgl');
+  if(!state.trx.length){el.innerHTML='Input Penjualan';return;}
+  const badge=state.exported
+    ?'<span class="export-badge sudah">✓ Sudah Export</span>'
+    :'<span class="export-badge belum">● Belum Export</span>';
+  el.innerHTML='Input Penjualan '+badge;
+}
+
+/* ---- pencarian ---- */
 function setChannel(c){channel=c;document.getElementById('chToko').classList.toggle('aktif',c===0);document.getElementById('chOjol').classList.toggle('aktif',c===1);renderHasil();}
 function normalize(s){return s.toLowerCase().replace(/\s+/g,' ').trim();}
 function renderHasil(){
@@ -201,7 +336,7 @@ function renderHasil(){
   wrap.innerHTML=list.map(it=>`<div class="item" onclick="tambah(${it.id})"><div><div class="nm">${it.nama}</div><div class="meta">${it.kat}</div></div><div class="hg">${rp(it.harga)}</div></div>`).join('');
 }
 
-/* ---------- keranjang (nota berjalan) ---------- */
+/* ---- keranjang ---- */
 function tambah(id){
   const it=ITEMS.find(x=>x.id===id);
   if(keranjang[id])keranjang[id].qty++;
@@ -229,46 +364,89 @@ function renderKeranjang(){
   }).join('');
   document.getElementById('keranjangTotal').textContent=rp(totalKeranjang());
 }
-
 function simpanNota(){
-  const ids=Object.keys(keranjang);
-  if(!ids.length)return;
+  const ids=Object.keys(keranjang);if(!ids.length)return;
   const items=ids.map(id=>({id:+id,nama:keranjang[id].item.nama,harga:keranjang[id].item.harga,qty:keranjang[id].qty,ch:keranjang[id].item.ch}));
-  const total=totalKeranjang();
-  state.trx.push({waktu:new Date().toISOString(),items,total});
-  save();keranjang={};renderKeranjang();renderTrx();updateHeaderInfo();
+  state.trx.push({waktu:new Date().toISOString(),items,total:totalKeranjang()});
+  state.exported=false;
+  save();keranjang={};renderKeranjang();renderTrx();updateHeaderInfo();updateStatusHeader();
   toast('Nota tersimpan ✓');
 }
 
-/* ---------- transaksi ---------- */
+/* ---- transaksi ---- */
 function renderTrx(){
   const wrap=document.getElementById('trxList');
   const kosong=document.getElementById('trxKosong');
   if(!state.trx.length){wrap.innerHTML='';kosong.style.display='block';}
   else{
     kosong.style.display='none';
-    wrap.innerHTML=state.trx.map((t,i)=>{
+    wrap.innerHTML=state.trx.map((t,i)=>({t,i})).reverse().map(({t,i})=>{
       const jam=new Date(t.waktu).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
       const isi=t.items.map(it=>`${it.nama} ×${it.qty}`).join(', ');
-      return `<div class="trx"><div class="th"><span>Nota #${i+1} · ${jam}</span><button class="hapus" onclick="hapusTrx(${i})">hapus</button></div>
-      <div class="ti">${isi}</div><div class="tt"><span>${t.items.reduce((s,x)=>s+x.qty,0)} item</span><b>${rp(t.total)}</b></div></div>`;
-    }).reverse().join('');
+      return `<div class="trx"><div class="th"><span>Nota #${i+1} · ${jam}</span>
+        <div class="trx-aksi"><button class="edit" onclick="bukaEditNota(${i})">edit</button><button class="hapus" onclick="hapusTrx(${i})">hapus</button></div></div>
+        <div class="ti">${isi}</div>
+        <div class="tt"><span>${t.items.reduce((s,x)=>s+x.qty,0)} item</span><b>${rp(t.total)}</b></div></div>`;
+    }).join('');
   }
   document.getElementById('sJumlahNota').textContent=state.trx.length;
   document.getElementById('sJumlahItem').textContent=totalItem();
   document.getElementById('sTotalOmzet').textContent=rp(totalOmzet());
   document.getElementById('trxCount').textContent=state.trx.length?`(${state.trx.length})`:'';
 }
-function hapusTrx(i){if(!confirm('Hapus nota #'+(i+1)+'?'))return;state.trx.splice(i,1);save();renderTrx();updateHeaderInfo();}
+function hapusTrx(i){
+  if(!confirm('Hapus nota #'+(i+1)+'?'))return;
+  state.trx.splice(i,1);state.exported=false;
+  save();renderTrx();updateHeaderInfo();updateStatusHeader();
+}
 function totalOmzet(){return state.trx.reduce((s,t)=>s+t.total,0);}
 function totalItem(){return state.trx.reduce((s,t)=>s+t.items.reduce((a,x)=>a+x.qty,0),0);}
+function updateHeaderInfo(){document.getElementById('trxCount').textContent=state.trx.length?`(${state.trx.length})`:'';
+}
 
-/* ---------- Pencocokan ---------- */
+/* ---- edit nota ---- */
+function bukaEditNota(i){
+  editNotaIdx=i;
+  const nota=state.trx[i];
+  editKeranjang={};
+  nota.items.forEach(it=>{editKeranjang[it.id]={item:ITEMS.find(x=>x.id===it.id)||{nama:it.nama,harga:it.harga,id:it.id},qty:it.qty};});
+  document.getElementById('modalJudul').textContent='Edit Nota #'+(i+1);
+  renderModalEdit();
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+function renderModalEdit(){
+  const ids=Object.keys(editKeranjang);
+  if(!ids.length){document.getElementById('modalKonten').innerHTML='<div class="kosong" style="padding:20px">Keranjang kosong.</div>';return;}
+  const total=ids.reduce((s,id)=>s+editKeranjang[id].item.harga*editKeranjang[id].qty,0);
+  document.getElementById('modalKonten').innerHTML=ids.map(id=>{
+    const r=editKeranjang[id];
+    return `<div class="edit-item-row"><div class="edit-item-nm">${r.item.nama}<div class="edit-item-hg">${rp(r.item.harga)}</div></div>
+    <div class="qtybox"><button onclick="editUbahQty(${id},-1)">−</button><span>${r.qty}</span><button onclick="editUbahQty(${id},1)">+</button></div>
+    <button class="del" onclick="editHapusItem(${id})">×</button></div>`;
+  }).join('')+`<div class="ktotal" style="margin-top:12px"><span>Total nota</span><b style="color:var(--merah);font-size:18px">${rp(total)}</b></div>`;
+}
+function editUbahQty(id,d){if(!editKeranjang[id])return;editKeranjang[id].qty+=d;if(editKeranjang[id].qty<=0)delete editKeranjang[id];renderModalEdit();}
+function editHapusItem(id){delete editKeranjang[id];renderModalEdit();}
+function simpanEdit(){
+  const ids=Object.keys(editKeranjang);
+  if(!ids.length){if(!confirm('Keranjang kosong. Hapus nota ini?'))return;state.trx.splice(editNotaIdx,1);}
+  else{
+    const items=ids.map(id=>({id:+id,nama:editKeranjang[id].item.nama,harga:editKeranjang[id].item.harga,qty:editKeranjang[id].qty,ch:editKeranjang[id].item.ch}));
+    const total=ids.reduce((s,id)=>s+editKeranjang[id].item.harga*editKeranjang[id].qty,0);
+    state.trx[editNotaIdx]={...state.trx[editNotaIdx],items,total};
+  }
+  state.exported=false;save();tutupModal();renderTrx();updateHeaderInfo();updateStatusHeader();
+  toast('Nota diperbarui ✓');
+}
+function tutupModal(){document.getElementById('modalOverlay').classList.add('hidden');editNotaIdx=null;editKeranjang={};}
+
+/* ---- pencocokan ---- */
 function renderRekap(){
   document.getElementById('rOmzetApp').textContent=rp(totalOmzet());
   document.getElementById('rItemApp').textContent=totalItem();
   document.getElementById('inOmzet').value=state.struk.omzet||'';
   document.getElementById('inItem').value=state.struk.item||'';
+  updateWASection();
   hitungCocok();
 }
 function hitungCocok(){
@@ -277,113 +455,195 @@ function hitungCocok(){
   state.struk={omzet:o,item:it};save();
   const box=document.getElementById('hasilCocok');
   const det=document.getElementById('selisihDetail');
-  const btn=document.getElementById('btnExport');
-  const appO=totalOmzet(), appI=totalItem();
-
-  // Export hanya boleh jika KEDUA field terisi DAN keduanya cocok
+  const appO=totalOmzet(),appI=totalItem();
   if(o===''||it===''){
-    box.className='cocok netral';
-    box.textContent='Isi kedua angka dari struk';
-    det.textContent='';
-    setExport(false);
-    return;
+    box.className='cocok netral';box.textContent='Isi kedua angka dari struk';det.textContent='';
+    setExport(false);updateWASection();return;
   }
-  const dO=appO-(+o), dI=appI-(+it);
-  if(dO===0 && dI===0){
-    box.className='cocok ok';
-    box.textContent='✓ Cocok semua — data valid, siap export';
-    det.textContent='';
-    setExport(true);
+  const dO=appO-(+o),dI=appI-(+it);
+  if(dO===0&&dI===0){
+    box.className='cocok ok';box.textContent='✓ Cocok semua — data valid, siap export';det.textContent='';setExport(true);
   } else {
-    box.className='cocok beda';
-    box.textContent='✗ Belum cocok — export terkunci';
+    box.className='cocok beda';box.textContent='✗ Belum cocok — export terkunci';
     let p=[];
     if(dO!==0)p.push(`Omzet selisih ${rp(Math.abs(dO))} (${dO>0?'aplikasi lebih besar':'aplikasi lebih kecil'})`);
     if(dI!==0)p.push(`Item selisih ${Math.abs(dI)} (${dI>0?'aplikasi lebih banyak':'aplikasi lebih sedikit'})`);
-    det.textContent=p.join(' · ');
-    setExport(false);
+    det.textContent=p.join(' · ');setExport(false);
   }
+  updateWASection();
 }
 function setExport(boleh){
   const btn=document.getElementById('btnExport');
-  btn.disabled=!boleh;
-  btn.style.opacity=boleh?'1':'0.5';
-  btn.style.cursor=boleh?'pointer':'not-allowed';
+  btn.disabled=!boleh;btn.style.opacity=boleh?'1':'0.5';btn.style.cursor=boleh?'pointer':'not-allowed';
 }
 
-/* ---------- export excel ---------- */
+/* ---- WA section ---- */
+function buildWAText(){
+  const tgl=fmtTglPanjang(state.tanggal);
+  const omzet=rp(totalOmzet());
+  const item=totalItem();
+  const nota=state.trx.length;
+  return `*Laporan Penjualan Chicken Day*\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah direkonsiliasi`;
+}
+function updateWASection(){
+  const nomor=getNomorWA();
+  const sudahCocok=document.getElementById('hasilCocok').classList.contains('ok');
+  // Tampil nomor
+  document.getElementById('waNomorTampil').textContent=nomor||'Belum diatur';
+  // Preview pesan
+  document.getElementById('waPreview').textContent=state.trx.length?buildWAText():'(Belum ada transaksi)';
+  // Enable tombol hanya jika: nomor ada + data cocok + sudah export
+  const btnWA=document.getElementById('btnKirimWA');
+  const bisa=!!nomor&&sudahCocok&&state.exported&&state.trx.length>0;
+  btnWA.disabled=!bisa;
+  btnWA.style.opacity=bisa?'1':'0.6';
+  btnWA.style.cursor=bisa?'pointer':'not-allowed';
+  // Tooltip kenapa disabled
+  if(!nomor)btnWA.title='Atur nomor WA admin di tab Data';
+  else if(!state.trx.length)btnWA.title='Belum ada transaksi';
+  else if(!sudahCocok)btnWA.title='Cocokkan data dulu dengan struk';
+  else if(!state.exported)btnWA.title='Export Excel dulu sebelum kirim WA';
+  else btnWA.title='';
+}
+function kirimWA(){
+  const nomor=getNomorWA();
+  if(!nomor){toast('Atur nomor WA admin di tab Data dulu');return;}
+  if(!state.exported){toast('Export Excel dulu sebelum kirim WA');return;}
+  const pesan=encodeURIComponent(buildWAText());
+  window.open(`https://wa.me/${nomor}?text=${pesan}`,'_blank');
+}
+
+/* ---- export excel ---- */
 function exportExcel(){
   if(document.getElementById('btnExport').disabled){toast('Cocokkan kedua angka dulu');return;}
   if(!state.trx.length){toast('Belum ada transaksi');return;}
-  // Agregasi qty per item (id -> qty terjual)
   const agg={};
-  state.trx.forEach(t=>t.items.forEach(it=>{ agg[it.id]=(agg[it.id]||0)+it.qty; }));
+  state.trx.forEach(t=>t.items.forEach(it=>{agg[it.id]=(agg[it.id]||0)+it.qty;}));
   const wb=XLSX.utils.book_new();
-
-  // Sheet 1: Rekap per item — SELURUH menu, urutan & nama sama master (id 1..561)
-  const d1=[['Tanggal',state.tanggal],['Outlet','Chicken Day'],[],
-    ['No','Item','Channel','Harga','Qty','Subtotal']];
-  const HDR=4;                                   // baris header (1-indexed): No,Item,...
+  const d1=[['Tanggal',state.tanggal],['Outlet','Chicken Day'],[],['No','Item','Channel','Harga','Qty','Subtotal']];
+  const HDR=4;
   ITEMS.forEach((it,idx)=>{
-    const q=agg[it.id];
-    const r=HDR+1+idx;                           // baris Excel item ini
-    const qty = (q && q>0) ? q : '';
-    const sub = (q && q>0) ? {f:`D${r}*E${r}`} : '';   // Subtotal = Harga × Qty (formula)
-    d1.push([it.id, it.nama, it.ch?'Ojol':'Toko', it.harga, qty, sub]);
+    const q=agg[it.id];const r=HDR+1+idx;
+    const qty=(q&&q>0)?q:'';
+    const sub=(q&&q>0)?{f:`D${r}*E${r}`}:'';
+    d1.push([it.id,it.nama,it.ch?'Ojol':'Toko',it.harga,qty,sub]);
   });
-  const rAwal=HDR+1, rAkhir=HDR+ITEMS.length;    // rentang data item
+  const rAwal=HDR+1,rAkhir=HDR+ITEMS.length;
+  d1.push([]);const rTotal=rAkhir+2;
+  d1.push(['','','','TOTAL',{f:`SUM(E${rAwal}:E${rAkhir})`},{f:`SUM(F${rAwal}:F${rAkhir})`}]);
   d1.push([]);
-  const rTotal=rAkhir+2;                          // baris TOTAL (ada 1 baris kosong)
-  d1.push(['','','','TOTAL', {f:`SUM(E${rAwal}:E${rAkhir})`}, {f:`SUM(F${rAwal}:F${rAkhir})`}]);
-  d1.push([]);
-  d1.push(['Jumlah nota', state.trx.length]);
-  d1.push(['Jumlah item', {f:`E${rTotal}`}]);
-  d1.push(['Total', {f:`F${rTotal}`}]);
-  d1.push(['Jumlah item (struk)', state.struk.item===''?'':Number(state.struk.item)]);
-  d1.push(['Total (struk)', state.struk.omzet===''?'':Number(state.struk.omzet)]);
+  d1.push(['Jumlah nota',state.trx.length]);
+  d1.push(['Jumlah item',{f:`E${rTotal}`}]);
+  d1.push(['Total',{f:`F${rTotal}`}]);
+  d1.push(['Jumlah item (struk)',state.struk.item===''?'':Number(state.struk.item)]);
+  d1.push(['Total (struk)',state.struk.omzet===''?'':Number(state.struk.omzet)]);
   const ws1=XLSX.utils.aoa_to_sheet(d1);
   ws1['!cols']=[{wch:5},{wch:32},{wch:8},{wch:10},{wch:6},{wch:12}];
   XLSX.utils.book_append_sheet(wb,ws1,'Rekap Item');
-
-  // Sheet 2: Detail per nota
   const d2=[['No Nota','Waktu','Item','Qty','Harga','Subtotal','Total Nota']];
-  let r2=1;                                         // baris header
+  let r2=1;
   state.trx.forEach((t,i)=>{
     const jam=new Date(t.waktu).toLocaleString('id-ID');
-    const baris0=r2+1;                              // baris pertama item nota ini
+    const baris0=r2+1;
     t.items.forEach((it,j)=>{
       r2++;
-      const sub={f:`E${r2}*D${r2}`};                // Subtotal = Harga × Qty
-      const tot = j===0 ? {f:`SUM(F${baris0}:F${baris0+t.items.length-1})`} : '';
-      d2.push([j===0?i+1:'', j===0?jam:'', it.nama, it.qty, it.harga, sub, tot]);
+      const sub={f:`E${r2}*D${r2}`};
+      const tot=j===0?{f:`SUM(F${baris0}:F${baris0+t.items.length-1})`}:'';
+      d2.push([j===0?i+1:'',j===0?jam:'',it.nama,it.qty,it.harga,sub,tot]);
     });
   });
   const ws2=XLSX.utils.aoa_to_sheet(d2);
   ws2['!cols']=[{wch:8},{wch:20},{wch:32},{wch:6},{wch:10},{wch:12},{wch:12}];
   XLSX.utils.book_append_sheet(wb,ws2,'Detail Nota');
-
   const def=`IP_${state.tanggal}_CD_`;
-  let nama=prompt('Nama file (.xlsx):', def);
-  if(nama===null){toast('Export dibatalkan');return;}   // petugas tekan Batal
-  nama=nama.trim();
-  if(!nama)nama=def;                                     // kosong → pakai default
-  nama=nama.replace(/[\/\\:*?"<>|]/g,'-');               // buang karakter ilegal
-  if(!/\.xlsx$/i.test(nama))nama+='.xlsx';               // tambah .xlsx jika lupa
+  let nama=prompt('Nama file (.xlsx):',def);
+  if(nama===null){toast('Export dibatalkan');return;}
+  nama=nama.trim();if(!nama)nama=def;
+  nama=nama.replace(/[\/\\:*?"<>|]/g,'-');
+  if(!/\.xlsx$/i.test(nama))nama+='.xlsx';
   XLSX.writeFile(wb,nama);
-  toast('Excel diunduh: '+nama);
+  state.exported=true;save();updateStatusHeader();updateWASection();
+  toast('✓ Excel diunduh: '+nama);
 }
 
-/* ---------- navigasi ---------- */
+/* ---- backup & restore ---- */
+function getAllDates(){
+  const dates=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('cda_penjualan_')){
+      const tgl=k.replace('cda_penjualan_','');
+      if(/^\d{4}-\d{2}-\d{2}$/.test(tgl))dates.push(tgl);
+    }
+  }
+  return dates.sort();
+}
+function getStateForDate(tgl){
+  const raw=localStorage.getItem(key(tgl));
+  if(!raw)return null;try{return JSON.parse(raw);}catch(e){return null;}
+}
+function backupJSON(){
+  const allDates=getAllDates();
+  if(!allDates.length){toast('Tidak ada data untuk dibackup');return;}
+  const backup={versi:1,dibuat:new Date().toISOString(),outlet:'Chicken Day',data:{}};
+  allDates.forEach(tgl=>{const s=getStateForDate(tgl);if(s)backup.data[tgl]=s;});
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`backup_CD_${todayStr()}.json`;a.click();URL.revokeObjectURL(url);
+  toast(`Backup diunduh (${allDates.length} hari)`);
+}
+function restoreJSON(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const backup=JSON.parse(e.target.result);
+      if(!backup.data||typeof backup.data!=='object')throw new Error('Format tidak valid');
+      const tgls=Object.keys(backup.data);
+      if(!tgls.length){toast('File backup kosong');return;}
+      let restored=0,skipped=0;
+      tgls.forEach(tgl=>{
+        const existing=getStateForDate(tgl);
+        if(existing&&existing.trx&&existing.trx.length){
+          const existingWaktu=new Set(existing.trx.map(t=>t.waktu));
+          const newTrx=backup.data[tgl].trx.filter(t=>!existingWaktu.has(t.waktu));
+          if(newTrx.length){existing.trx=[...existing.trx,...newTrx];localStorage.setItem(key(tgl),JSON.stringify(existing));restored++;}
+          else skipped++;
+        } else {localStorage.setItem(key(tgl),JSON.stringify(backup.data[tgl]));restored++;}
+      });
+      event.target.value='';
+      load(state.tanggal);renderTrx();updateHeaderInfo();updateStatusHeader();
+      toast(`Restore selesai: ${restored} hari dipulihkan, ${skipped} sudah ada`);
+    }catch(err){toast('Gagal baca file: '+err.message);event.target.value='';}
+  };
+  reader.readAsText(file);
+}
+function resetSemuaData(){
+  const allDates=getAllDates();
+  if(!allDates.length){toast('Tidak ada data');return;}
+  if(!confirm(`Hapus SEMUA data (${allDates.length} hari)?\nPastikan sudah backup terlebih dahulu.\n\nTidak bisa dibatalkan.`))return;
+  allDates.forEach(tgl=>localStorage.removeItem(key(tgl)));
+  load(state.tanggal);keranjang={};renderKeranjang();renderTrx();renderRekap();updateHeaderInfo();updateStatusHeader();
+  toast('Semua data dihapus');
+}
+
+/* ---- navigasi ---- */
 function ganti(v){
-  ['input','trx','rekap'].forEach(x=>{
-    document.getElementById('v'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('hidden',x!==v);
-    document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle('aktif',x!==v?false:true);
+  ['input','trx','rekap','data'].forEach(x=>{
+    const sec=document.getElementById('v'+x.charAt(0).toUpperCase()+x.slice(1));
+    const tab=document.getElementById('tab'+x.charAt(0).toUpperCase()+x.slice(1));
+    if(sec)sec.classList.toggle('hidden',x!==v);
+    if(tab)tab.classList.toggle('aktif',x===v);
   });
   if(v==='trx')renderTrx();
   if(v==='rekap')renderRekap();
+  if(v==='data'){
+    const nomor=getNomorWA();
+    document.getElementById('inputNomorWA').value=nomor;
+    document.getElementById('statusNomorWA').textContent=nomor?'Nomor tersimpan: '+nomor:'';
+  }
 }
-function updateHeaderInfo(){document.getElementById('trxCount').textContent=state.trx.length?`(${state.trx.length})`:'';}
-
 function gantiTanggal(){
   const tgl=document.getElementById('tglHari').value||todayStr();
   keranjang={};renderKeranjang();
@@ -391,24 +651,22 @@ function gantiTanggal(){
   if(!document.getElementById('vRekap').classList.contains('hidden'))renderRekap();
   toast('Pindah ke '+tgl);
 }
-
 function resetHari(){
-  if(!confirm('Hapus SEMUA data tanggal '+state.tanggal+'? Tindakan ini tidak bisa dibatalkan.'))return;
+  if(!confirm('Hapus SEMUA data tanggal '+state.tanggal+'?\nTindakan ini tidak bisa dibatalkan.'))return;
   localStorage.removeItem(key(state.tanggal));
-  load(state.tanggal);keranjang={};renderKeranjang();renderTrx();renderRekap();updateHeaderInfo();
+  load(state.tanggal);keranjang={};renderKeranjang();renderTrx();renderRekap();updateHeaderInfo();updateStatusHeader();
   toast('Data direset');
 }
 
 let toastT;
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),1500);}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2500);}
 
-/* ---------- init ---------- */
+/* ---- init ---- */
 document.getElementById('cari').addEventListener('input',renderHasil);
 document.getElementById('tglHari').addEventListener('change',gantiTanggal);
 document.getElementById('tglHari').value=todayStr();
 load(todayStr());
 renderHasil();renderTrx();updateHeaderInfo();
-
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>
