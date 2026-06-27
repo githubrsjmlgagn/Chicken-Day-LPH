@@ -231,7 +231,7 @@ input,select,button{font-family:inherit;font-size:15px;}
       </div>
     </div>
 
-    <button class="btn btn-garis" style="margin-top:8px;border-color:#ddd" onclick="resetHari()">Reset data hari ini</button>
+
   </section>
 
   <!-- TAB DATA -->
@@ -808,12 +808,6 @@ function gantiTanggal(){
   load(tgl);renderTrx();updateHeaderInfo();
   if(!document.getElementById('vRekap').classList.contains('hidden'))renderRekap();
   toast('Pindah ke '+tgl);
-}
-function resetHari(){
-  if(!confirm('Hapus SEMUA data tanggal '+state.tanggal+'?\nTindakan ini tidak bisa dibatalkan.'))return;
-  localStorage.removeItem(key(state.tanggal));
-  load(state.tanggal);keranjang={};renderKeranjang();renderTrx();renderRekap();updateHeaderInfo();updateStatusHeader();
-  toast('Data direset');
 }
 
 let toastT;
