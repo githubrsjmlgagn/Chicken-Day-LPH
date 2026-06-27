@@ -1,7 +1,7 @@
 {
   "name": "Chicken Day - Input Penjualan",
   "short_name": "Chicken Day",
-  "description": "Input penjualan per item, rekonsiliasi struk harian, export Excel",
+  "description": "Input penjualan per item, pencocokan struk harian, export Excel",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",
