@@ -6,6 +6,8 @@
 <meta name="theme-color" content="#7A1E1E">
 <title>Chicken Day</title>
 <link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+<link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css">
 <style>
 :root{--merah:#7A1E1E;--merah2:#9a2a2a;--emas:#D9A116;--bg:#f4f1ec;--card:#fff;--teks:#2b2b2b;--abu:#6f6f6f;--garis:#e3ddd3;--hijau:#1d7a4d;--merahx:#c0392b;--biru:#1a5fa8;--wa:#25D366;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
@@ -167,17 +169,17 @@ input,select,button{font-family:inherit;font-size:15px;}
   <button id="tabInput" class="aktif" onclick="ganti('input')">Input</button>
   <button id="tabTrx" onclick="ganti('trx')">Transaksi <span id="trxCount"></span></button>
   <button id="tabRekap" onclick="ganti('rekap')">Pencocokan</button>
-  <button id="tabData" onclick="bukaPin()">⚙ Pengaturan</button>
+  <button id="tabData" onclick="bukaPin()"><i class="fi fi-rr-settings"></i> Pengaturan</button>
 </div>
 
 <main>
   <!-- TAB INPUT -->
   <section id="vInput">
     <div id="bannerKunciInput" class="banner-kunci hidden">
-      <div class="bk-ikon">🔒</div>
+      <div class="bk-ikon"><i class="fi fi-rr-lock"></i></div>
       <div class="bk-teks">
         <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
-        <div class="bk-sub">Input dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+        <div class="bk-sub">Input dinonaktifkan. Untuk mengedit, buka kunci di <i class="fi fi-rr-settings"></i> Pengaturan.</div>
       </div>
     </div>
     <div id="inputKonten">
@@ -201,10 +203,10 @@ input,select,button{font-family:inherit;font-size:15px;}
   <!-- TAB TRANSAKSI -->
   <section id="vTrx" class="hidden">
     <div id="bannerKunciTrx" class="banner-kunci hidden">
-      <div class="bk-ikon">🔒</div>
+      <div class="bk-ikon"><i class="fi fi-rr-lock"></i></div>
       <div class="bk-teks">
         <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
-        <div class="bk-sub">Edit dan hapus nota dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+        <div class="bk-sub">Edit dan hapus nota dinonaktifkan. Untuk mengedit, buka kunci di <i class="fi fi-rr-settings"></i> Pengaturan.</div>
       </div>
     </div>
     <div class="statbar">
@@ -219,10 +221,10 @@ input,select,button{font-family:inherit;font-size:15px;}
   <!-- TAB PENCOCOKAN -->
   <section id="vRekap" class="hidden">
     <div id="bannerKunciRekap" class="banner-kunci hidden">
-      <div class="bk-ikon">🔒</div>
+      <div class="bk-ikon"><i class="fi fi-rr-lock"></i></div>
       <div class="bk-teks">
         <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
-        <div class="bk-sub">Pencocokan dan export ulang dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+        <div class="bk-sub">Pencocokan dan export ulang dinonaktifkan. Untuk mengedit, buka kunci di <i class="fi fi-rr-settings"></i> Pengaturan.</div>
       </div>
     </div>
     <div class="kartu">
@@ -234,7 +236,7 @@ input,select,button{font-family:inherit;font-size:15px;}
       <h3>Angka dari struk</h3>
       <div class="field">
         <label>Total di struk</label>
-        <input type="number" id="inOmzet" inputmode="numeric" placeholder="Rp." oninput="hitungCocok()">
+        <input type="text" id="inOmzet" inputmode="numeric" placeholder="Rp." oninput="formatRibuan(this);hitungCocok()">
       </div>
       <div class="field">
         <label>Jumlah item di struk</label>
@@ -245,11 +247,11 @@ input,select,button{font-family:inherit;font-size:15px;}
     </div>
 
     <!-- Export Excel -->
-    <button class="btn btn-emas" id="btnExport" onclick="exportExcel()" style="margin-top:0">⬇ Export Excel</button>
+    <button class="btn btn-emas" id="btnExport" onclick="exportExcel()" style="margin-top:0"><i class="fi fi-rr-file-excel"></i> Export Excel</button>
 
     <!-- Kirim WhatsApp -->
     <div class="wa-box" id="waBox" style="margin-top:12px">
-      <h3>📤 Kirim ke Admin Pusat</h3>
+      <h3><i class="fi fi-rr-paper-plane"></i> Kirim ke Admin Pusat</h3>
       <div class="wa-no-wrap">
         <span>Nomor WA:</span>
         <b id="waNomorTampil">—</b>
@@ -257,7 +259,7 @@ input,select,button{font-family:inherit;font-size:15px;}
       </div>
       <div class="wa-preview" id="waPreview">—</div>
       <button class="btn btn-wa" id="btnKirimWA" onclick="kirimWA()" disabled>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.122 1.532 5.856L.057 23.882a.5.5 0 0 0 .612.612l6.036-1.474A11.955 11.955 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.885 0-3.651-.522-5.163-1.43l-.364-.215-3.781.924.95-3.671-.236-.374A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+        <i class="fi fi-brands-whatsapp"></i>
         Buka WhatsApp
       </button>
       <div class="wa-step">
@@ -275,17 +277,17 @@ input,select,button{font-family:inherit;font-size:15px;}
   <section id="vData" class="hidden">
 
     <div class="data-section">
-      <h3>🔓 Buka Kunci Tanggal</h3>
+      <h3><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal</h3>
       <p>Tanggal yang sudah di-export terkunci otomatis. Pilih tanggal untuk membuka kuncinya agar bisa diedit kembali.</p>
       <div class="unlock-wrap">
         <input type="date" id="unlockTgl" onchange="cekStatusUnlock()">
       </div>
       <div class="unlock-info kosong" id="unlockInfo">Pilih tanggal untuk melihat statusnya.</div>
-      <button class="btn btn-garis" id="btnUnlock" style="border-color:var(--emas);color:#7a5a00;display:none" onclick="konfirmasiUnlock()">🔓 Buka Kunci Tanggal Ini</button>
+      <button class="btn btn-garis" id="btnUnlock" style="border-color:var(--emas);color:#7a5a00;display:none" onclick="konfirmasiUnlock()"><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal Ini</button>
     </div>
 
     <div class="data-section">
-      <h3>🔒 Ganti PIN</h3>
+      <h3><i class="fi fi-rr-lock"></i> Ganti PIN</h3>
       <p>PIN digunakan untuk mengunci halaman Pengaturan ini.</p>
       <button class="btn btn-garis" onclick="gantiPIN()">Ganti PIN</button>
     </div>
@@ -300,20 +302,30 @@ input,select,button{font-family:inherit;font-size:15px;}
     </div>
 
     <div class="data-section">
-      <h3>💾 Backup Data</h3>
+      <h3><i class="fi fi-rr-shop"></i> Nama Outlet</h3>
+      <p>Wajib diisi sesuai lokasi outlet ini. Otomatis ditambahkan ke nama file Excel, file backup, dan teks WhatsApp — supaya pusat tahu laporan ini dari outlet mana.</p>
+      <div class="set-row">
+        <input type="text" id="inputOutlet" placeholder="Contoh: Ampel">
+        <button class="btn btn-utama btn-sm" onclick="simpanNamaOutlet()">Simpan</button>
+      </div>
+      <div class="kecil" id="statusOutlet"></div>
+    </div>
+
+    <div class="data-section">
+      <h3><i class="fi fi-rr-cloud-download"></i> Backup Data</h3>
       <p>Unduh seluruh data transaksi semua tanggal sebagai file .json. Simpan sebagai cadangan — bisa digunakan untuk restore jika data hilang.</p>
       <button class="btn btn-hijau" onclick="backupJSON()">Unduh Backup (.json)</button>
     </div>
 
     <div class="data-section">
-      <h3>📂 Restore Data</h3>
+      <h3><i class="fi fi-rr-folder-open"></i> Restore Data</h3>
       <p>Muat data dari file backup .json. Data di-restore akan digabung dengan data yang sudah ada.</p>
       <button class="btn btn-biru" onclick="document.getElementById('inputRestore').click()">Pilih File Backup (.json)</button>
       <input type="file" id="inputRestore" accept=".json" style="display:none" onchange="restoreJSON(event)">
     </div>
 
     <div class="data-section">
-      <h3>🗑️ Hapus Semua Data</h3>
+      <h3><i class="fi fi-rr-trash"></i> Hapus Semua Data</h3>
       <p>Hapus <strong>seluruh</strong> data dari semua tanggal. Lakukan backup terlebih dahulu. Tidak bisa dibatalkan.</p>
       <button class="btn btn-garis" style="border-color:var(--merahx);color:var(--merahx)" onclick="resetSemuaData()">Hapus Semua Data</button>
     </div>
@@ -326,7 +338,7 @@ input,select,button{font-family:inherit;font-size:15px;}
 <!-- MODAL PIN -->
 <div class="pin-overlay hidden" id="pinOverlay">
   <div class="pin-box">
-    <h3 id="pinJudul">🔒 Pengaturan</h3>
+    <h3><i class="fi fi-rr-lock"></i> <span id="pinJudul">Pengaturan</span></h3>
     <p id="pinSubjudul">Masukkan PIN untuk membuka Pengaturan</p>
     <div class="pin-dots" id="pinDots">
       <div class="pin-dot" id="pd0"></div>
@@ -377,11 +389,17 @@ const ITEMS=MENU_DATA.items.map(a=>({id:a[0],nama:a[1],harga:a[2],ch:a[3],kat:KA
 let channel=0;
 let keranjang={};
 let state={tanggal:'',trx:[],struk:{omzet:'',item:''},exported:false};
+const LAST_BACKUP_KEY='cda_last_backup';
+const BACKUP_REMINDER_HARI=7;
 let editNotaIdx=null;
 let editKeranjang={};
 
 /* ---- utils ---- */
 function rp(n){return 'Rp '+(n||0).toLocaleString('id-ID');}
+function formatRibuan(el){
+  const raw=el.value.replace(/\D/g,'');
+  el.value=raw?Number(raw).toLocaleString('id-ID'):'';
+}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtTglPanjang(tgl){
   const [y,m,d]=tgl.split('-');
@@ -393,10 +411,20 @@ function getNomorWA(){return localStorage.getItem('cda_nomor_wa')||'';}
 function simpanNomorWA(){
   const val=document.getElementById('inputNomorWA').value.trim().replace(/\D/g,'');
   if(!val){toast('Nomor tidak boleh kosong');return;}
+  if(!val.startsWith('62')){toast('Nomor harus diawali kode negara 62 (mis. 6281234567890)');return;}
+  if(val.length<10||val.length>15){toast('Panjang nomor tidak wajar — cek kembali nomornya');return;}
   localStorage.setItem('cda_nomor_wa',val);
   document.getElementById('statusNomorWA').textContent='✓ Tersimpan: '+val;
   updateWASection();
   toast('Nomor WA disimpan');
+}
+function getNamaOutlet(){return localStorage.getItem('cda_outlet')||'';}
+function simpanNamaOutlet(){
+  const val=document.getElementById('inputOutlet').value.trim();
+  if(!val){toast('Nama outlet tidak boleh kosong');return;}
+  localStorage.setItem('cda_outlet',val);
+  document.getElementById('statusOutlet').textContent='✓ Tersimpan: '+val;
+  toast('Nama outlet disimpan');
 }
 
 /* ---- state ---- */
@@ -416,7 +444,7 @@ function updateStatusHeader(){
   const el=document.getElementById('headerStatusTgl');
   if(!state.trx.length){el.innerHTML='Input Penjualan';return;}
   const badge=state.exported
-    ?'<span class="export-badge sudah">✓ Sudah Export</span>'
+    ?'<span class="export-badge sudah"><i class="fi fi-rr-badge-check"></i> Sudah Export</span>'
     :'<span class="export-badge belum">● Belum Export</span>';
   el.innerHTML='Input Penjualan '+badge;
 }
@@ -563,13 +591,13 @@ function tutupModal(){document.getElementById('modalOverlay').classList.add('hid
 function renderRekap(){
   document.getElementById('rOmzetApp').textContent=rp(totalOmzet());
   document.getElementById('rItemApp').textContent=totalItem();
-  document.getElementById('inOmzet').value=state.struk.omzet||'';
+  document.getElementById('inOmzet').value=state.struk.omzet?Number(state.struk.omzet).toLocaleString('id-ID'):'';
   document.getElementById('inItem').value=state.struk.item||'';
   updateWASection();
   hitungCocok();
 }
 function hitungCocok(){
-  const o=document.getElementById('inOmzet').value;
+  const o=document.getElementById('inOmzet').value.replace(/\./g,'');
   const it=document.getElementById('inItem').value;
   state.struk={omzet:o,item:it};save();
   const box=document.getElementById('hasilCocok');
@@ -602,7 +630,8 @@ function buildWAText(){
   const omzet=rp(totalOmzet());
   const item=totalItem();
   const nota=state.trx.length;
-  return `IP_Chicken Day_\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah cocok`;
+  const outlet=getNamaOutlet();
+  return `IP_CD_${outlet?' '+outlet:''}\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah cocok`;
 }
 function updateWASection(){
   const nomor=getNomorWA();
@@ -639,7 +668,7 @@ function exportExcel(){
   const agg={};
   state.trx.forEach(t=>t.items.forEach(it=>{agg[it.id]=(agg[it.id]||0)+it.qty;}));
   const wb=XLSX.utils.book_new();
-  const d1=[['Tanggal',state.tanggal],['Outlet','Chicken Day'],[],['No','Item','Channel','Harga','Qty','Subtotal']];
+  const d1=[['Tanggal',state.tanggal],['Outlet',getNamaOutlet()||'Chicken Day'],[],['No','Item','Channel','Harga','Qty','Subtotal']];
   const HDR=4;
   ITEMS.forEach((it,idx)=>{
     const q=agg[it.id];const r=HDR+1+idx;
@@ -674,7 +703,7 @@ function exportExcel(){
   const ws2=XLSX.utils.aoa_to_sheet(d2);
   ws2['!cols']=[{wch:8},{wch:20},{wch:32},{wch:6},{wch:10},{wch:12},{wch:12}];
   XLSX.utils.book_append_sheet(wb,ws2,'Detail Nota');
-  const def=`IP_${state.tanggal}_CD_`;
+  const def=`IP_${state.tanggal}_CD_${getNamaOutlet()}`;
   let nama=prompt('Nama file (.xlsx):',def);
   if(nama===null){toast('Export dibatalkan');return;}
   nama=nama.trim();if(!nama)nama=def;
@@ -704,12 +733,14 @@ function getStateForDate(tgl){
 function backupJSON(){
   const allDates=getAllDates();
   if(!allDates.length){toast('Tidak ada data untuk dibackup');return;}
-  const backup={versi:1,dibuat:new Date().toISOString(),outlet:'Chicken Day',data:{}};
+  const backup={versi:1,dibuat:new Date().toISOString(),outlet:getNamaOutlet()||'Chicken Day',data:{}};
   allDates.forEach(tgl=>{const s=getStateForDate(tgl);if(s)backup.data[tgl]=s;});
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`backup_CD_${todayStr()}.json`;a.click();URL.revokeObjectURL(url);
+  const outlet=getNamaOutlet();
+  a.href=url;a.download=`backup_CD_${outlet?outlet+'_':''}${todayStr()}.json`;a.click();URL.revokeObjectURL(url);
+  localStorage.setItem(LAST_BACKUP_KEY,Date.now().toString());
   toast(`Backup diunduh (${allDates.length} hari)`);
 }
 function restoreJSON(event){
@@ -747,6 +778,20 @@ function resetSemuaData(){
   toast('Semua data dihapus');
 }
 
+/* ---- reminder backup ---- */
+function cekReminderBackup(){
+  const last=localStorage.getItem(LAST_BACKUP_KEY);
+  if(!getAllDates().length)return; // tidak ada data sama sekali, tidak perlu ingatkan
+  if(!last){
+    toast('Belum pernah backup data — disarankan backup lewat ⚙ Pengaturan');
+    return;
+  }
+  const hariBerlalu=Math.floor((Date.now()-Number(last))/86400000);
+  if(hariBerlalu>=BACKUP_REMINDER_HARI){
+    toast(`Sudah ${hariBerlalu} hari sejak backup terakhir — disarankan backup lagi lewat ⚙ Pengaturan`);
+  }
+}
+
 /* ---- PIN ---- */
 const PIN_KEY='cda_pin';
 let pinBuffer='';
@@ -764,7 +809,7 @@ function bukaPin(tujuan){
   pinBuffer='';pinCoba=0;
   if(!sudahAdaPIN()){
     pinMode='buat';
-    document.getElementById('pinJudul').textContent='🔒 Buat PIN';
+    document.getElementById('pinJudul').textContent='Buat PIN';
     document.getElementById('pinSubjudul').textContent='Buat PIN 4 digit untuk mengunci Pengaturan';
   } else {
     const now=Date.now();
@@ -773,7 +818,7 @@ function bukaPin(tujuan){
       toast(`Terlalu banyak percobaan. Coba lagi dalam ${detik} detik.`);return;
     }
     pinMode='buka';
-    document.getElementById('pinJudul').textContent='🔒 Pengaturan';
+    document.getElementById('pinJudul').textContent='Pengaturan';
     document.getElementById('pinSubjudul').textContent='Masukkan PIN untuk membuka Pengaturan';
   }
   document.getElementById('pinErr').textContent='';
@@ -809,7 +854,7 @@ function prosesPIN(){
   if(pinMode==='buat'){
     pinSementara=pinBuffer;pinBuffer='';
     pinMode='konfirmasi';
-    document.getElementById('pinJudul').textContent='🔒 Konfirmasi PIN';
+    document.getElementById('pinJudul').textContent='Konfirmasi PIN';
     document.getElementById('pinSubjudul').textContent='Masukkan ulang PIN untuk konfirmasi';
     document.getElementById('pinErr').textContent='';
     renderPinDots();
@@ -824,7 +869,7 @@ function prosesPIN(){
       renderPinSalah();
       setTimeout(()=>{
         pinMode='buat';pinSementara='';
-        document.getElementById('pinJudul').textContent='🔒 Buat PIN';
+        document.getElementById('pinJudul').textContent='Buat PIN';
         document.getElementById('pinSubjudul').textContent='Buat PIN 4 digit untuk mengunci Pengaturan';
         document.getElementById('pinErr').textContent='';
       },600);
@@ -904,6 +949,9 @@ function ganti(v){
     const nomor=getNomorWA();
     document.getElementById('inputNomorWA').value=nomor;
     document.getElementById('statusNomorWA').textContent=nomor?'Nomor tersimpan: '+nomor:'';
+    const outlet=getNamaOutlet();
+    document.getElementById('inputOutlet').value=outlet;
+    document.getElementById('statusOutlet').textContent=outlet?'Outlet tersimpan: '+outlet:'';
     document.getElementById('unlockTgl').value=state.tanggal;
     cekStatusUnlock();
   }
@@ -925,6 +973,7 @@ document.getElementById('tglHari').addEventListener('change',gantiTanggal);
 document.getElementById('tglHari').value=todayStr();
 load(todayStr());
 renderHasil();renderTrx();updateHeaderInfo();
+setTimeout(cekReminderBackup,3000);
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>

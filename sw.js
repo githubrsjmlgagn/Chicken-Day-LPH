@@ -1,11 +1,13 @@
 // PENTING: naikkan angka versi ini SETIAP kali ada file yang diedit,
 // jika tidak, HP staf akan tetap memuat versi lama dari cache.
-const CACHE = 'cda-penjualan-v10.4';
+const CACHE = 'cda-penjualan-v12';
 const ASSETS = [
   './',
   './index.html',
   './menu.js',
   './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'
 ];
 
