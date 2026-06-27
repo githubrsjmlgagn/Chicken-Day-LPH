@@ -22,8 +22,14 @@ header .tgl{font-size:12px;color:#f0d9a8;}
 main{padding:12px;max-width:560px;margin:0 auto;padding-bottom:90px;}
 .cari-wrap{position:sticky;top:90px;z-index:15;background:var(--bg);padding-bottom:8px;}
 input,select,button{font-family:inherit;font-size:15px;}
-.cari{width:100%;padding:12px 14px;border:1px solid var(--garis);border-radius:10px;background:#fff;outline:none;}
+.cari{width:100%;padding:12px 38px 12px 14px;border:1px solid var(--garis);border-radius:10px;background:#fff;outline:none;}
 .cari:focus{border-color:var(--emas);}
+.cari-input-wrap{position:relative;}
+.cari-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--abu);font-size:16px;cursor:pointer;padding:8px;display:none;}
+.cari-clear:active{color:var(--merahx);}
+.chan-info{font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;margin-bottom:8px;text-align:center;}
+.chan-info.reguler{background:#f3f0ea;color:var(--abu);}
+.chan-info.ojol{background:#fff4e0;color:#b8850c;}
 .chan{display:flex;gap:6px;margin:8px 0;}
 .chan button{flex:1;padding:8px;border:1px solid var(--garis);background:#fff;border-radius:8px;color:var(--abu);font-weight:600;cursor:pointer;font-size:13px;}
 .chan button.aktif{background:var(--merah);color:#fff;border-color:var(--merah);}
@@ -31,6 +37,9 @@ input,select,button{font-family:inherit;font-size:15px;}
 .item{background:var(--card);border:1px solid var(--garis);border-radius:10px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;}
 .item:active{background:#faf6ee;}
 .item .nm{font-weight:600;font-size:14px;line-height:1.25;}
+.ch-reguler{color:var(--teks);}
+.ch-ojol{color:var(--hijau);}
+.fi-rr-star{color:#e0a32e;}
 .item .meta{font-size:11px;color:var(--abu);margin-top:2px;}
 .item .hg{font-weight:700;color:var(--merah);white-space:nowrap;font-size:14px;}
 .kosong{text-align:center;color:var(--abu);padding:30px 10px;font-size:14px;}
@@ -62,9 +71,10 @@ input,select,button{font-family:inherit;font-size:15px;}
 .trx .ti{font-size:13px;line-height:1.4;}
 .trx .tt{display:flex;justify-content:space-between;margin-top:6px;font-weight:700;}
 .trx .tt b{color:var(--merah);}
-.trx-aksi{display:flex;gap:6px;}
-.trx .hapus{background:none;border:none;color:var(--merahx);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
-.trx .edit{background:none;border:none;color:var(--biru);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;}
+.trx-aksi{display:flex;gap:10px;}
+.trx .hapus{background:#fdeaea;border:1px solid #f3c9c9;color:var(--merahx);font-size:12px;font-weight:600;cursor:pointer;padding:6px 13px;border-radius:8px;}
+.trx .edit{background:#e8f1fa;border:1px solid #c3dcf0;color:var(--biru);font-size:12px;font-weight:600;cursor:pointer;padding:6px 13px;border-radius:8px;}
+.trx .hapus:active,.trx .edit:active{transform:scale(0.96);}
 /* Pencocokan */
 .kartu{background:var(--card);border:1px solid var(--garis);border-radius:12px;padding:14px;margin-bottom:12px;}
 .kartu h3{margin:0 0 10px;font-size:15px;color:var(--merah);display:flex;align-items:center;justify-content:space-between;}
@@ -184,11 +194,15 @@ input,select,button{font-family:inherit;font-size:15px;}
     </div>
     <div id="inputKonten">
     <div class="cari-wrap">
-      <input class="cari" id="cari" placeholder="Cari menu…" autocomplete="off">
+      <div class="cari-input-wrap">
+        <input class="cari" id="cari" placeholder="Cari menu…" autocomplete="off">
+        <button class="cari-clear" id="cariClear" onclick="clearCari()" aria-label="Hapus pencarian"><i class="fi fi-rr-cross-small"></i></button>
+      </div>
       <div class="chan">
-        <button id="chToko" class="aktif" onclick="setChannel(0)">Toko</button>
+        <button id="chReguler" class="aktif" onclick="setChannel(0)">Reguler</button>
         <button id="chOjol" onclick="setChannel(1)">Ojol (G)</button>
       </div>
+      <div class="chan-info reguler" id="chanInfo">Channel aktif: <b>Reguler</b></div>
     </div>
     <div class="keranjang" id="keranjangWrap" style="display:none">
       <h3>Nota berjalan</h3>
@@ -369,6 +383,15 @@ input,select,button{font-family:inherit;font-size:15px;}
 <div class="modal-overlay hidden" id="modalOverlay">
   <div class="modal">
     <h3 id="modalJudul">Edit Nota</h3>
+    <div class="cari-input-wrap" style="margin-bottom:8px">
+      <input class="cari" id="modalCari" placeholder="Tambah item ke nota ini…" autocomplete="off" oninput="renderModalCariHasil()">
+      <button class="cari-clear" id="modalCariClear" onclick="clearModalCari()" aria-label="Hapus pencarian"><i class="fi fi-rr-cross-small"></i></button>
+    </div>
+    <div class="chan" style="margin:0 0 6px">
+      <button id="modalChReguler" class="aktif" onclick="setModalChannel(0)">Reguler</button>
+      <button id="modalChOjol" onclick="setModalChannel(1)">Ojol (G)</button>
+    </div>
+    <div id="modalCariHasil" style="max-height:170px;overflow-y:auto;margin-bottom:10px"></div>
     <div id="modalKonten"></div>
     <div class="modal-footer">
       <button class="btn btn-garis" style="margin-top:0" onclick="tutupModal()">Batal</button>
@@ -393,9 +416,11 @@ const LAST_BACKUP_KEY='cda_last_backup';
 const BACKUP_REMINDER_HARI=7;
 let editNotaIdx=null;
 let editKeranjang={};
+let modalChannel=0;
 
 /* ---- utils ---- */
 function rp(n){return 'Rp '+(n||0).toLocaleString('id-ID');}
+function chClass(ch){return ch===1?'ch-ojol':'ch-reguler';}
 function formatRibuan(el){
   const raw=el.value.replace(/\D/g,'');
   el.value=raw?Number(raw).toLocaleString('id-ID'):'';
@@ -450,16 +475,51 @@ function updateStatusHeader(){
 }
 
 /* ---- pencarian ---- */
-function setChannel(c){channel=c;document.getElementById('chToko').classList.toggle('aktif',c===0);document.getElementById('chOjol').classList.toggle('aktif',c===1);renderHasil();}
+function setChannel(c){
+  channel=c;
+  document.getElementById('chReguler').classList.toggle('aktif',c===0);
+  document.getElementById('chOjol').classList.toggle('aktif',c===1);
+  const info=document.getElementById('chanInfo');
+  info.innerHTML='Channel aktif: <b>'+(c===0?'Reguler':'Ojol (G)')+'</b>';
+  info.className='chan-info '+(c===0?'reguler':'ojol');
+  renderHasil();
+}
 function normalize(s){return s.toLowerCase().replace(/\s+/g,' ').trim();}
+function clearCari(){
+  document.getElementById('cari').value='';
+  renderHasil();
+  document.getElementById('cari').focus();
+}
+/* ---- frekuensi menu (untuk favorit/terlaris) ---- */
+const FREK_KEY='cda_frekuensi_menu';
+function getFrekuensi(){try{return JSON.parse(localStorage.getItem(FREK_KEY)||'{}');}catch(e){return {};}}
+function tambahFrekuensi(itemsArr){
+  const f=getFrekuensi();
+  itemsArr.forEach(it=>{f[it.id]=(f[it.id]||0)+it.qty;});
+  localStorage.setItem(FREK_KEY,JSON.stringify(f));
+}
 function renderHasil(){
-  const q=normalize(document.getElementById('cari').value);
+  const rawQ=document.getElementById('cari').value;
+  document.getElementById('cariClear').style.display=rawQ?'block':'none';
+  const q=normalize(rawQ);
   const wrap=document.getElementById('hasil');
+  const frek=getFrekuensi();
   let list=ITEMS.filter(it=>it.ch===channel);
-  if(q){const tokens=q.split(' ');list=list.filter(it=>{const n=normalize(it.nama);return tokens.every(t=>n.includes(t));});}
+  if(q){
+    const tokens=q.split(' ');
+    list=list.filter(it=>{const n=normalize(it.nama);return tokens.every(t=>n.includes(t));});
+  }
+  // Favorit/terlaris di atas — baik saat browsing kosong maupun di antara hasil cari
+  list=[...list].sort((a,b)=>(frek[b.id]||0)-(frek[a.id]||0));
+  const totalCocok=list.length;
   list=list.slice(0,60);
   if(!list.length){wrap.innerHTML='<div class="kosong">Tidak ada menu cocok.</div>';return;}
-  wrap.innerHTML=list.map(it=>`<div class="item" onclick="tambah(${it.id})"><div><div class="nm">${it.nama}</div><div class="meta">${it.kat}</div></div><div class="hg">${rp(it.harga)}</div></div>`).join('');
+  let html=list.map(it=>{
+    const fav=!q&&(frek[it.id]>0);
+    return `<div class="item" onclick="tambah(${it.id})"><div><div class="nm ${chClass(it.ch)}">${fav?'<i class="fi fi-rr-star"></i> ':''}${it.nama}</div><div class="meta">${it.kat}</div></div><div class="hg">${rp(it.harga)}</div></div>`;
+  }).join('');
+  if(totalCocok>60)html+=`<div class="kosong" style="padding:14px 10px">+${totalCocok-60} hasil lagi — ketik lebih spesifik untuk mempersempit</div>`;
+  wrap.innerHTML=html;
 }
 
 /* ---- keranjang ---- */
@@ -484,7 +544,7 @@ function renderKeranjang(){
   wrap.style.display='block';
   document.getElementById('keranjangList').innerHTML=ids.map(id=>{
     const r=keranjang[id];
-    return `<div class="krow"><div class="knm">${r.item.nama}<div class="ksub">${rp(r.item.harga)} × ${r.qty} = ${rp(r.item.harga*r.qty)}</div></div>
+    return `<div class="krow"><div class="knm ${chClass(r.item.ch)}">${r.item.nama}<div class="ksub">${rp(r.item.harga)} × ${r.qty} = ${rp(r.item.harga*r.qty)}</div></div>
     <div class="qtybox"><button onclick="ubahQty(${id},-1)">−</button><span>${r.qty}</span><button onclick="ubahQty(${id},1)">+</button></div>
     <button class="del" onclick="hapusKeranjang(${id})">×</button></div>`;
   }).join('');
@@ -495,6 +555,7 @@ function simpanNota(){
   const items=ids.map(id=>({id:+id,nama:keranjang[id].item.nama,harga:keranjang[id].item.harga,qty:keranjang[id].qty,ch:keranjang[id].item.ch}));
   state.trx.push({waktu:new Date().toISOString(),items,total:totalKeranjang()});
   state.exported=false;
+  tambahFrekuensi(items);
   save();keranjang={};renderKeranjang();renderTrx();updateHeaderInfo();updateStatusHeader();
   toast('Nota tersimpan ✓');
 }
@@ -508,8 +569,8 @@ function renderTrx(){
     kosong.style.display='none';
     wrap.innerHTML=state.trx.map((t,i)=>({t,i})).reverse().map(({t,i})=>{
       const jam=new Date(t.waktu).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
-      const isi=t.items.map(it=>`${it.nama} ×${it.qty}`).join(', ');
-      const aksi=isTerkunci()?'':`<div class="trx-aksi"><button class="edit" onclick="bukaEditNota(${i})">edit</button><button class="hapus" onclick="hapusTrx(${i})">hapus</button></div>`;
+      const isi=t.items.map(it=>`<span class="${chClass(it.ch)}">${it.nama} ×${it.qty}</span>`).join(', ');
+      const aksi=isTerkunci()?'':`<div class="trx-aksi"><button class="edit" onclick="bukaEditNota(${i})"><i class="fi fi-rr-pencil"></i> Edit</button><button class="hapus" onclick="hapusTrx(${i})"><i class="fi fi-rr-trash"></i> Hapus</button></div>`;
       return `<div class="trx"><div class="th"><span>Nota #${i+1} · ${jam}</span>${aksi}</div>
         <div class="ti">${isi}</div>
         <div class="tt"><span>${t.items.reduce((s,x)=>s+x.qty,0)} item</span><b>${rp(t.total)}</b></div></div>`;
@@ -556,8 +617,19 @@ function bukaEditNota(i){
   editNotaIdx=i;
   const nota=state.trx[i];
   editKeranjang={};
-  nota.items.forEach(it=>{editKeranjang[it.id]={item:ITEMS.find(x=>x.id===it.id)||{nama:it.nama,harga:it.harga,id:it.id},qty:it.qty};});
+  // PENTING: pakai harga yang dibekukan di nota (it.harga), BUKAN harga terkini dari katalog —
+  // supaya edit nota lama tidak diam-diam mengubah harga historis kalau harga menu sudah berubah.
+  nota.items.forEach(it=>{editKeranjang[it.id]={item:{nama:it.nama,harga:it.harga,id:it.id,ch:it.ch,kat:(ITEMS.find(x=>x.id===it.id)||{}).kat},qty:it.qty};});
   document.getElementById('modalJudul').textContent='Edit Nota #'+(i+1);
+  // Default toggle channel ikut channel MAYORITAS item di nota ini — bukan selalu Reguler —
+  // supaya tidak salah tambah item dengan channel keliru saat nota aslinya didominasi Ojol (G).
+  const totalOjol=nota.items.reduce((s,it)=>s+(it.ch===1?it.qty:0),0);
+  const totalReguler=nota.items.reduce((s,it)=>s+(it.ch===0?it.qty:0),0);
+  modalChannel=totalOjol>totalReguler?1:0;
+  document.getElementById('modalChReguler').classList.toggle('aktif',modalChannel===0);
+  document.getElementById('modalChOjol').classList.toggle('aktif',modalChannel===1);
+  document.getElementById('modalCari').value='';
+  document.getElementById('modalCariHasil').innerHTML='';
   renderModalEdit();
   document.getElementById('modalOverlay').classList.remove('hidden');
 }
@@ -567,7 +639,7 @@ function renderModalEdit(){
   const total=ids.reduce((s,id)=>s+editKeranjang[id].item.harga*editKeranjang[id].qty,0);
   document.getElementById('modalKonten').innerHTML=ids.map(id=>{
     const r=editKeranjang[id];
-    return `<div class="edit-item-row"><div class="edit-item-nm">${r.item.nama}<div class="edit-item-hg">${rp(r.item.harga)}</div></div>
+    return `<div class="edit-item-row"><div class="edit-item-nm ${chClass(r.item.ch)}">${r.item.nama}<div class="edit-item-hg">${rp(r.item.harga)}</div></div>
     <div class="qtybox"><button onclick="editUbahQty(${id},-1)">−</button><span>${r.qty}</span><button onclick="editUbahQty(${id},1)">+</button></div>
     <button class="del" onclick="editHapusItem(${id})">×</button></div>`;
   }).join('')+`<div class="ktotal" style="margin-top:12px"><span>Total nota</span><b style="color:var(--merah);font-size:18px">${rp(total)}</b></div>`;
@@ -585,7 +657,44 @@ function simpanEdit(){
   state.exported=false;save();tutupModal();renderTrx();updateHeaderInfo();updateStatusHeader();
   toast('Nota diperbarui ✓');
 }
-function tutupModal(){document.getElementById('modalOverlay').classList.add('hidden');editNotaIdx=null;editKeranjang={};}
+function tutupModal(){
+  document.getElementById('modalOverlay').classList.add('hidden');
+  editNotaIdx=null;editKeranjang={};
+  document.getElementById('modalCari').value='';
+  document.getElementById('modalCariHasil').innerHTML='';
+}
+function setModalChannel(c){
+  modalChannel=c;
+  document.getElementById('modalChReguler').classList.toggle('aktif',c===0);
+  document.getElementById('modalChOjol').classList.toggle('aktif',c===1);
+  renderModalCariHasil();
+}
+function clearModalCari(){
+  document.getElementById('modalCari').value='';
+  renderModalCariHasil();
+  document.getElementById('modalCari').focus();
+}
+function renderModalCariHasil(){
+  const rawQ=document.getElementById('modalCari').value;
+  document.getElementById('modalCariClear').style.display=rawQ?'block':'none';
+  const q=normalize(rawQ);
+  const wrap=document.getElementById('modalCariHasil');
+  if(!q){wrap.innerHTML='';return;}
+  const tokens=q.split(' ');
+  let list=ITEMS.filter(it=>it.ch===modalChannel);
+  list=list.filter(it=>{const n=normalize(it.nama);return tokens.every(t=>n.includes(t));});
+  list=list.slice(0,20);
+  if(!list.length){wrap.innerHTML='<div class="kosong" style="padding:14px">Tidak ada menu cocok.</div>';return;}
+  wrap.innerHTML=list.map(it=>`<div class="item" onclick="modalTambahItem(${it.id})"><div><div class="nm ${chClass(it.ch)}">${it.nama}</div><div class="meta">${it.kat}</div></div><div class="hg">${rp(it.harga)}</div></div>`).join('');
+}
+function modalTambahItem(id){
+  const it=ITEMS.find(x=>x.id===id);
+  if(editKeranjang[id])editKeranjang[id].qty++;
+  else editKeranjang[id]={item:it,qty:1};
+  renderModalEdit();
+  clearModalCari();
+  toast(it.nama+' ditambahkan ke nota');
+}
 
 /* ---- pencocokan ---- */
 function renderRekap(){
@@ -674,7 +783,7 @@ function exportExcel(){
     const q=agg[it.id];const r=HDR+1+idx;
     const qty=(q&&q>0)?q:'';
     const sub=(q&&q>0)?{f:`D${r}*E${r}`}:'';
-    d1.push([it.id,it.nama,it.ch?'Ojol':'Toko',it.harga,qty,sub]);
+    d1.push([it.id,it.nama,it.ch?'Ojol':'Reguler',it.harga,qty,sub]);
   });
   const rAwal=HDR+1,rAkhir=HDR+ITEMS.length;
   d1.push([]);const rTotal=rAkhir+2;
