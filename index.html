@@ -136,6 +136,20 @@ input,select,button{font-family:inherit;font-size:15px;}
 .pin-numpad .pin-kosong{border:none;background:none;cursor:default;}
 .pin-err{color:var(--merahx);font-size:12px;font-weight:600;min-height:16px;margin-bottom:8px;}
 .pin-box .btn-batal{background:none;border:none;color:var(--abu);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px;width:auto;margin-top:0;}
+/* banner kunci tanggal */
+.banner-kunci{background:#fff8e1;border:1px solid #f0c040;border-radius:10px;padding:12px 14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:10px;}
+.banner-kunci .bk-ikon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.banner-kunci .bk-teks{flex:1;}
+.banner-kunci .bk-judul{font-weight:700;font-size:13px;color:#7a5a00;margin-bottom:2px;}
+.banner-kunci .bk-sub{font-size:12px;color:#9a7a20;line-height:1.4;}
+/* unlock picker di pengaturan */
+.unlock-wrap{display:flex;gap:8px;align-items:center;margin-bottom:10px;}
+.unlock-wrap input[type=date]{flex:1;padding:10px 12px;border:1px solid var(--garis);border-radius:8px;outline:none;font-size:14px;}
+.unlock-wrap input:focus{border-color:var(--emas);}
+.unlock-info{font-size:13px;padding:10px 12px;border-radius:8px;margin-bottom:8px;line-height:1.5;}
+.unlock-info.sudah{background:#fdeaea;color:var(--merahx);}
+.unlock-info.belum{background:#f3f0ea;color:var(--abu);}
+.unlock-info.kosong{background:#f3f0ea;color:var(--abu);}
 </style>
 </head>
 <body>
@@ -159,6 +173,14 @@ input,select,button{font-family:inherit;font-size:15px;}
 <main>
   <!-- TAB INPUT -->
   <section id="vInput">
+    <div id="bannerKunciInput" class="banner-kunci hidden">
+      <div class="bk-ikon">🔒</div>
+      <div class="bk-teks">
+        <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
+        <div class="bk-sub">Input dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+      </div>
+    </div>
+    <div id="inputKonten">
     <div class="cari-wrap">
       <input class="cari" id="cari" placeholder="Cari menu…" autocomplete="off">
       <div class="chan">
@@ -173,10 +195,18 @@ input,select,button{font-family:inherit;font-size:15px;}
       <button class="btn btn-utama" onclick="simpanNota()">Simpan nota ke transaksi</button>
     </div>
     <div class="hasil" id="hasil"></div>
+    </div>
   </section>
 
   <!-- TAB TRANSAKSI -->
   <section id="vTrx" class="hidden">
+    <div id="bannerKunciTrx" class="banner-kunci hidden">
+      <div class="bk-ikon">🔒</div>
+      <div class="bk-teks">
+        <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
+        <div class="bk-sub">Edit dan hapus nota dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+      </div>
+    </div>
     <div class="statbar">
       <div class="stat"><b id="sTotalOmzet">Rp 0</b><span>Total</span></div>
       <div class="stat"><b id="sJumlahItem">0</b><span>Jumlah item</span></div>
@@ -188,6 +218,13 @@ input,select,button{font-family:inherit;font-size:15px;}
 
   <!-- TAB PENCOCOKAN -->
   <section id="vRekap" class="hidden">
+    <div id="bannerKunciRekap" class="banner-kunci hidden">
+      <div class="bk-ikon">🔒</div>
+      <div class="bk-teks">
+        <div class="bk-judul">Data tanggal ini sudah di-export & terkunci</div>
+        <div class="bk-sub">Rekonsiliasi dan export ulang dinonaktifkan. Untuk mengedit, buka kunci di ⚙ Pengaturan.</div>
+      </div>
+    </div>
     <div class="kartu">
       <h3>Angka dari aplikasi</h3>
       <div class="baris"><span class="lbl">Total</span><span class="val" id="rOmzetApp">Rp 0</span></div>
@@ -236,6 +273,16 @@ input,select,button{font-family:inherit;font-size:15px;}
 
   <!-- TAB DATA -->
   <section id="vData" class="hidden">
+
+    <div class="data-section">
+      <h3>🔓 Buka Kunci Tanggal</h3>
+      <p>Tanggal yang sudah di-export terkunci otomatis. Pilih tanggal untuk membuka kuncinya agar bisa diedit kembali.</p>
+      <div class="unlock-wrap">
+        <input type="date" id="unlockTgl" onchange="cekStatusUnlock()">
+      </div>
+      <div class="unlock-info kosong" id="unlockInfo">Pilih tanggal untuk melihat statusnya.</div>
+      <button class="btn btn-garis" id="btnUnlock" style="border-color:var(--emas);color:#7a5a00;display:none" onclick="konfirmasiUnlock()">🔓 Buka Kunci Tanggal Ini</button>
+    </div>
 
     <div class="data-section">
       <h3>🔒 Ganti PIN</h3>
@@ -360,6 +407,7 @@ function load(tgl){
   state.tanggal=tgl;
   if(state.exported===undefined)state.exported=false;
   updateStatusHeader();
+  updateKunciUI();
 }
 function save(){localStorage.setItem(key(state.tanggal),JSON.stringify(state));}
 
@@ -433,8 +481,8 @@ function renderTrx(){
     wrap.innerHTML=state.trx.map((t,i)=>({t,i})).reverse().map(({t,i})=>{
       const jam=new Date(t.waktu).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
       const isi=t.items.map(it=>`${it.nama} ×${it.qty}`).join(', ');
-      return `<div class="trx"><div class="th"><span>Nota #${i+1} · ${jam}</span>
-        <div class="trx-aksi"><button class="edit" onclick="bukaEditNota(${i})">edit</button><button class="hapus" onclick="hapusTrx(${i})">hapus</button></div></div>
+      const aksi=isTerkunci()?'':`<div class="trx-aksi"><button class="edit" onclick="bukaEditNota(${i})">edit</button><button class="hapus" onclick="hapusTrx(${i})">hapus</button></div>`;
+      return `<div class="trx"><div class="th"><span>Nota #${i+1} · ${jam}</span>${aksi}</div>
         <div class="ti">${isi}</div>
         <div class="tt"><span>${t.items.reduce((s,x)=>s+x.qty,0)} item</span><b>${rp(t.total)}</b></div></div>`;
     }).join('');
@@ -452,6 +500,27 @@ function hapusTrx(i){
 function totalOmzet(){return state.trx.reduce((s,t)=>s+t.total,0);}
 function totalItem(){return state.trx.reduce((s,t)=>s+t.items.reduce((a,x)=>a+x.qty,0),0);}
 function updateHeaderInfo(){document.getElementById('trxCount').textContent=state.trx.length?`(${state.trx.length})`:'';
+}
+
+/* ---- kunci tanggal ---- */
+function isTerkunci(){return state.exported===true;}
+function updateKunciUI(){
+  const kunci=isTerkunci();
+  // Banner di semua tab
+  ['Input','Trx','Rekap'].forEach(t=>{
+    const el=document.getElementById('bannerKunci'+t);
+    if(el)el.classList.toggle('hidden',!kunci);
+  });
+  // Konten input
+  const inputKonten=document.getElementById('inputKonten');
+  if(inputKonten)inputKonten.style.display=kunci?'none':'block';
+  // Input rekonsiliasi & export
+  const inOmzet=document.getElementById('inOmzet');
+  const inItem=document.getElementById('inItem');
+  if(inOmzet)inOmzet.disabled=kunci;
+  if(inItem)inItem.disabled=kunci;
+  if(kunci){setExport(false);}
+  else{hitungCocok();}
 }
 
 /* ---- edit nota ---- */
@@ -784,6 +853,39 @@ function gantiPIN(){
   },100);
 }
 
+/* ---- buka kunci tanggal ---- */
+function cekStatusUnlock(){
+  const tgl=document.getElementById('unlockTgl').value;
+  const info=document.getElementById('unlockInfo');
+  const btn=document.getElementById('btnUnlock');
+  if(!tgl){info.className='unlock-info kosong';info.textContent='Pilih tanggal untuk melihat statusnya.';btn.style.display='none';return;}
+  const s=getStateForDate(tgl);
+  if(!s||!s.trx||!s.trx.length){
+    info.className='unlock-info belum';info.textContent=`Tanggal ${fmtTglPanjang(tgl)} — tidak ada data transaksi.`;btn.style.display='none';return;
+  }
+  if(s.exported){
+    info.className='unlock-info sudah';
+    info.textContent=`Tanggal ${fmtTglPanjang(tgl)} — sudah di-export & terkunci. Buka kunci untuk mengizinkan edit kembali.`;
+    btn.style.display='block';
+  } else {
+    info.className='unlock-info belum';
+    info.textContent=`Tanggal ${fmtTglPanjang(tgl)} — belum di-export, tidak terkunci.`;
+    btn.style.display='none';
+  }
+}
+function konfirmasiUnlock(){
+  const tgl=document.getElementById('unlockTgl').value;
+  if(!tgl)return;
+  if(!confirm(`Buka kunci tanggal ${fmtTglPanjang(tgl)}?\n\nStatus export akan direset. Karyawan perlu rekonsiliasi & export ulang setelah selesai koreksi.`))return;
+  const s=getStateForDate(tgl);
+  if(!s)return;
+  s.exported=false;
+  localStorage.setItem(key(tgl),JSON.stringify(s));
+  if(tgl===state.tanggal){state.exported=false;updateStatusHeader();updateKunciUI();renderTrx();renderRekap();}
+  cekStatusUnlock();
+  toast(`Kunci tanggal ${fmtTglPanjang(tgl)} dibuka ✓`);
+}
+
 /* ---- navigasi ---- */
 function ganti(v){
   ['input','trx','rekap','data'].forEach(x=>{
@@ -792,15 +894,16 @@ function ganti(v){
     if(sec)sec.classList.toggle('hidden',x!==v);
     if(tab)tab.classList.toggle('aktif',x===v);
   });
-  if(v==='trx')renderTrx();
-  if(v==='rekap')renderRekap();
+  if(v==='trx'){renderTrx();updateKunciUI();}
+  if(v==='rekap'){renderRekap();updateKunciUI();}
+  if(v==='input')updateKunciUI();
   if(v==='data'){
     const nomor=getNomorWA();
     document.getElementById('inputNomorWA').value=nomor;
     document.getElementById('statusNomorWA').textContent=nomor?'Nomor tersimpan: '+nomor:'';
+    document.getElementById('unlockTgl').value=state.tanggal;
+    cekStatusUnlock();
   }
-  // Kunci kembali saat keluar dari Pengaturan
-  if(v!=='data'){}
 }
 function gantiTanggal(){
   const tgl=document.getElementById('tglHari').value||todayStr();
