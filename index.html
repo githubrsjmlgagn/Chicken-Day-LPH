@@ -733,6 +733,7 @@ function getStateForDate(tgl){
 function backupJSON(){
   const allDates=getAllDates();
   if(!allDates.length){toast('Tidak ada data untuk dibackup');return;}
+  if(!confirm(`Unduh backup ${allDates.length} hari data ke file .json?`))return;
   const backup={versi:1,dibuat:new Date().toISOString(),outlet:getNamaOutlet()||'Chicken Day',data:{}};
   allDates.forEach(tgl=>{const s=getStateForDate(tgl);if(s)backup.data[tgl]=s;});
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
