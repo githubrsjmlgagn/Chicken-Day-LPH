@@ -120,6 +120,22 @@ input,select,button{font-family:inherit;font-size:15px;}
 .set-row input{flex:1;padding:10px 12px;border:1px solid var(--garis);border-radius:8px;outline:none;font-size:14px;}
 .set-row input:focus{border-color:var(--emas);}
 .set-row .btn-sm{width:auto;padding:10px 16px;margin-top:0;font-size:13px;white-space:nowrap;}
+/* modal PIN */
+.pin-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150;display:flex;align-items:center;justify-content:center;padding:20px;}
+.pin-box{background:#fff;border-radius:16px;padding:24px 20px;width:100%;max-width:320px;text-align:center;}
+.pin-box h3{margin:0 0 6px;font-size:17px;color:var(--merah);}
+.pin-box p{margin:0 0 16px;font-size:13px;color:var(--abu);line-height:1.5;}
+.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:16px;}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--garis);background:#fff;transition:background .15s;}
+.pin-dot.isi{background:var(--merah);border-color:var(--merah);}
+.pin-dot.salah{background:var(--merahx);border-color:var(--merahx);}
+.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;}
+.pin-numpad button{padding:14px;border:1px solid var(--garis);border-radius:10px;background:#fff;font-size:20px;font-weight:700;cursor:pointer;color:var(--teks);}
+.pin-numpad button:active{background:#f4efe6;}
+.pin-numpad .pin-del{font-size:16px;color:var(--merahx);}
+.pin-numpad .pin-kosong{border:none;background:none;cursor:default;}
+.pin-err{color:var(--merahx);font-size:12px;font-weight:600;min-height:16px;margin-bottom:8px;}
+.pin-box .btn-batal{background:none;border:none;color:var(--abu);font-size:13px;cursor:pointer;text-decoration:underline;padding:4px;width:auto;margin-top:0;}
 </style>
 </head>
 <body>
@@ -137,7 +153,7 @@ input,select,button{font-family:inherit;font-size:15px;}
   <button id="tabInput" class="aktif" onclick="ganti('input')">Input</button>
   <button id="tabTrx" onclick="ganti('trx')">Transaksi <span id="trxCount"></span></button>
   <button id="tabRekap" onclick="ganti('rekap')">Pencocokan</button>
-  <button id="tabData" onclick="ganti('data')">Setting</button>
+  <button id="tabData" onclick="bukaPin()">⚙ Pengaturan</button>
 </div>
 
 <main>
@@ -216,14 +232,18 @@ input,select,button{font-family:inherit;font-size:15px;}
     </div>
 
     <button class="btn btn-garis" style="margin-top:8px;border-color:#ddd" onclick="resetHari()">Reset data hari ini</button>
-    <div class="kecil" style="margin-top:8px">Cocokkan dulu kedua angka dengan struk harian sebelum export.</div>
   </section>
 
   <!-- TAB DATA -->
   <section id="vData" class="hidden">
 
     <div class="data-section">
-      <h3>📱 Nomor WA Admin Pusat</h3>
+      <h3>🔒 Ganti PIN</h3>
+      <p>PIN digunakan untuk mengunci halaman Pengaturan ini.</p>
+      <button class="btn btn-garis" onclick="gantiPIN()">Ganti PIN</button>
+    </div>
+
+    <div class="data-section">
       <p>Nomor ini digunakan untuk tombol kirim laporan di halaman Pencocokan. Format: angka saja tanpa tanda + atau strip, diawali kode negara.<br><small>Contoh: 6281234567890</small></p>
       <div class="set-row">
         <input type="tel" id="inputNomorWA" inputmode="numeric" placeholder="6281234567890">
@@ -255,6 +275,36 @@ input,select,button{font-family:inherit;font-size:15px;}
 </main>
 
 <div class="toast" id="toast"></div>
+
+<!-- MODAL PIN -->
+<div class="pin-overlay hidden" id="pinOverlay">
+  <div class="pin-box">
+    <h3 id="pinJudul">🔒 Pengaturan</h3>
+    <p id="pinSubjudul">Masukkan PIN untuk membuka Pengaturan</p>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-err" id="pinErr"></div>
+    <div class="pin-numpad">
+      <button onclick="pinInput('1')">1</button>
+      <button onclick="pinInput('2')">2</button>
+      <button onclick="pinInput('3')">3</button>
+      <button onclick="pinInput('4')">4</button>
+      <button onclick="pinInput('5')">5</button>
+      <button onclick="pinInput('6')">6</button>
+      <button onclick="pinInput('7')">7</button>
+      <button onclick="pinInput('8')">8</button>
+      <button onclick="pinInput('9')">9</button>
+      <button class="pin-kosong" disabled></button>
+      <button onclick="pinInput('0')">0</button>
+      <button class="pin-del" onclick="pinHapus()">⌫</button>
+    </div>
+    <button class="btn-batal" onclick="tutupPin()">Batal</button>
+  </div>
+</div>
 
 <!-- MODAL EDIT NOTA -->
 <div class="modal-overlay hidden" id="modalOverlay">
@@ -483,7 +533,7 @@ function buildWAText(){
   const omzet=rp(totalOmzet());
   const item=totalItem();
   const nota=state.trx.length;
-  return `*IP_Chicken Day_*\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah dicocokan`;
+  return `*Laporan Penjualan Chicken Day*\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah direkonsiliasi`;
 }
 function updateWASection(){
   const nomor=getNomorWA();
@@ -628,6 +678,112 @@ function resetSemuaData(){
   toast('Semua data dihapus');
 }
 
+/* ---- PIN ---- */
+const PIN_KEY='cda_pin';
+let pinBuffer='';
+let pinMode=''; // 'buka' | 'buat' | 'konfirmasi'
+let pinSementara='';
+let pinCoba=0;
+let pinBlokSampai=0;
+
+function getPIN(){return localStorage.getItem(PIN_KEY)||'';}
+function sudahAdaPIN(){return !!getPIN();}
+
+function bukaPin(){
+  pinBuffer='';pinCoba=0;
+  if(!sudahAdaPIN()){
+    pinMode='buat';
+    document.getElementById('pinJudul').textContent='🔒 Buat PIN';
+    document.getElementById('pinSubjudul').textContent='Buat PIN 4 digit untuk mengunci Pengaturan';
+  } else {
+    const now=Date.now();
+    if(pinBlokSampai>now){
+      const detik=Math.ceil((pinBlokSampai-now)/1000);
+      toast(`Terlalu banyak percobaan. Coba lagi dalam ${detik} detik.`);return;
+    }
+    pinMode='buka';
+    document.getElementById('pinJudul').textContent='🔒 Pengaturan';
+    document.getElementById('pinSubjudul').textContent='Masukkan PIN untuk membuka Pengaturan';
+  }
+  document.getElementById('pinErr').textContent='';
+  renderPinDots();
+  document.getElementById('pinOverlay').classList.remove('hidden');
+}
+function tutupPin(){document.getElementById('pinOverlay').classList.add('hidden');pinBuffer='';pinSementara='';pinMode='';}
+
+function pinInput(d){
+  if(pinBuffer.length>=4)return;
+  pinBuffer+=d;
+  renderPinDots();
+  if(pinBuffer.length===4)setTimeout(prosesPIN,120);
+}
+function pinHapus(){
+  pinBuffer=pinBuffer.slice(0,-1);
+  renderPinDots();
+  document.getElementById('pinErr').textContent='';
+}
+function renderPinDots(mode){
+  for(let i=0;i<4;i++){
+    const d=document.getElementById('pd'+i);
+    d.classList.toggle('isi',i<pinBuffer.length);
+    d.classList.remove('salah');
+  }
+}
+function renderPinSalah(){
+  for(let i=0;i<4;i++)document.getElementById('pd'+i).classList.add('salah');
+  setTimeout(()=>{pinBuffer='';renderPinDots();},500);
+}
+
+function prosesPIN(){
+  if(pinMode==='buat'){
+    pinSementara=pinBuffer;pinBuffer='';
+    pinMode='konfirmasi';
+    document.getElementById('pinJudul').textContent='🔒 Konfirmasi PIN';
+    document.getElementById('pinSubjudul').textContent='Masukkan ulang PIN untuk konfirmasi';
+    document.getElementById('pinErr').textContent='';
+    renderPinDots();
+  } else if(pinMode==='konfirmasi'){
+    if(pinBuffer===pinSementara){
+      localStorage.setItem(PIN_KEY,pinBuffer);
+      tutupPin();
+      ganti('data');
+      toast('PIN berhasil dibuat ✓');
+    } else {
+      document.getElementById('pinErr').textContent='PIN tidak sama, ulangi';
+      renderPinSalah();
+      setTimeout(()=>{
+        pinMode='buat';pinSementara='';
+        document.getElementById('pinJudul').textContent='🔒 Buat PIN';
+        document.getElementById('pinSubjudul').textContent='Buat PIN 4 digit untuk mengunci Pengaturan';
+        document.getElementById('pinErr').textContent='';
+      },600);
+    }
+  } else if(pinMode==='buka'){
+    if(pinBuffer===getPIN()){
+      pinCoba=0;tutupPin();ganti('data');
+    } else {
+      pinCoba++;
+      renderPinSalah();
+      if(pinCoba>=3){
+        pinBlokSampai=Date.now()+30000;
+        document.getElementById('pinErr').textContent='3× salah. Tunggu 30 detik.';
+        setTimeout(tutupPin,1000);
+      } else {
+        document.getElementById('pinErr').textContent=`PIN salah (${pinCoba}/3)`;
+      }
+    }
+  }
+}
+
+function gantiPIN(){
+  // Reset ke mode buat PIN baru dari dalam Pengaturan
+  localStorage.removeItem(PIN_KEY);
+  ganti('input'); // keluar dulu
+  setTimeout(()=>{
+    bukaPin(); // buka flow buat PIN baru
+  },100);
+}
+
 /* ---- navigasi ---- */
 function ganti(v){
   ['input','trx','rekap','data'].forEach(x=>{
@@ -643,6 +799,8 @@ function ganti(v){
     document.getElementById('inputNomorWA').value=nomor;
     document.getElementById('statusNomorWA').textContent=nomor?'Nomor tersimpan: '+nomor:'';
   }
+  // Kunci kembali saat keluar dari Pengaturan
+  if(v!=='data'){}
 }
 function gantiTanggal(){
   const tgl=document.getElementById('tglHari').value||todayStr();
