@@ -107,7 +107,7 @@ input,select,button{font-family:inherit;font-size:15px;}
 .toast.show{opacity:.95;}
 .tglpick{padding:6px 8px;border:1px solid #f0d9a8;background:rgba(255,255,255,.12);color:#fff;border-radius:7px;font-size:12px;}
 .kecil{font-size:11px;color:var(--abu);margin-top:4px;line-height:1.4;}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:130;display:flex;align-items:flex-end;justify-content:center;}
 .modal{background:#fff;border-radius:16px 16px 0 0;padding:16px;width:100%;max-width:560px;max-height:85vh;overflow-y:auto;}
 .modal h3{margin:0 0 12px;font-size:16px;color:var(--merah);}
 .modal-footer{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--garis);}
@@ -751,7 +751,11 @@ function updateKunciUI(){
   const inItem=document.getElementById('inItem');
   if(inOmzet)inOmzet.disabled=kunci;
   if(inItem)inItem.disabled=kunci;
-  if(kunci){setExport(false);}else{hitungCocok();}
+  if(kunci){
+    setExport(false);
+    const btnWA=document.getElementById('btnKirimWA');
+    if(btnWA){btnWA.disabled=true;btnWA.style.opacity='0.5';btnWA.style.cursor='not-allowed';btnWA.title='Data sudah terkunci';}
+  }else{hitungCocok();}
 }
 
 /* ---- unlock tanggal ---- */
