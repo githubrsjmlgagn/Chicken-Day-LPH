@@ -898,17 +898,23 @@ function buildWAText(){
   const outlet=getNamaOutlet();
   return `IP_CD_${outlet?' '+outlet:''}\nTanggal: ${tgl}\nTotal: ${omzet}\nJumlah item: ${item} | Nota: ${nota}\n✓ Data sudah cocok`;
 }
+function sudahCocokData(){
+  const o=state.struk&&state.struk.omzet!==''?+state.struk.omzet:null;
+  const it=state.struk&&state.struk.item!==''?+state.struk.item:null;
+  if(o===null||it===null||isNaN(o)||isNaN(it))return false;
+  return totalOmzet()===o&&totalItem()===it;
+}
 function updateWASection(){
   const nomor=getNomorWA();
-  const sudahCocok=document.getElementById('hasilCocok').classList.contains('ok');
+  const cocok=sudahCocokData();
   document.getElementById('waNomorTampil').textContent=nomor||'Belum diatur';
   document.getElementById('waPreview').textContent=state.trx.length?buildWAText():'(Belum ada transaksi)';
   const btnWA=document.getElementById('btnKirimWA');
-  const bisa=!!nomor&&sudahCocok&&state.exported&&state.trx.length>0;
+  const bisa=!!nomor&&cocok&&state.exported&&state.trx.length>0;
   btnWA.disabled=!bisa;btnWA.style.opacity=bisa?'1':'0.6';btnWA.style.cursor=bisa?'pointer':'not-allowed';
   if(!nomor)btnWA.title='Atur nomor WA admin di tab Pengaturan';
   else if(!state.trx.length)btnWA.title='Belum ada transaksi';
-  else if(!sudahCocok)btnWA.title='Cocokkan data dulu dengan struk';
+  else if(!cocok)btnWA.title='Cocokkan data dulu dengan struk';
   else if(!state.exported)btnWA.title='Export Excel dulu sebelum kirim WA';
   else btnWA.title='';
 }
