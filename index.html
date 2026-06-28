@@ -865,14 +865,19 @@ let _strukSaveTimer=null;
 function hitungCocok(){
   const o=document.getElementById('inOmzet').value.replace(/\./g,'');
   const it=document.getElementById('inItem').value;
-  state.struk={omzet:o,item:it};
+  // Hanya timpa state.struk jika field DOM berisi nilai (field sudah dirender/diisi user)
+  // Jika field kosong tapi state.struk sudah ada isi, pertahankan state.struk yang ada
+  if(o!==''||it!==''){state.struk={omzet:o,item:it};}
   clearTimeout(_strukSaveTimer);
   _strukSaveTimer=setTimeout(()=>{_strukSaveTimer=null;save();},400);
   const box=document.getElementById('hasilCocok');
   const det=document.getElementById('selisihDetail');
   const appO=totalOmzet(),appI=totalItem();
-  if(o===''||it===''){box.className='cocok netral';box.textContent='Isi kedua angka dari struk';det.textContent='';setExport(false);updateWASection();return;}
-  const dO=appO-(+o),dI=appI-(+it);
+  // Gunakan nilai dari state.struk (bukan DOM) sebagai sumber kebenaran
+  const strO=state.struk&&state.struk.omzet!==''?state.struk.omzet:'';
+  const strIt=state.struk&&state.struk.item!==''?state.struk.item:'';
+  if(strO===''||strIt===''){box.className='cocok netral';box.textContent='Isi kedua angka dari struk';det.textContent='';setExport(false);updateWASection();return;}
+  const dO=appO-(+strO),dI=appI-(+strIt);
   if(dO===0&&dI===0){
     box.className='cocok ok';box.textContent='✓ Cocok semua — data valid, siap export';det.textContent='';setExport(true);
   }else{
