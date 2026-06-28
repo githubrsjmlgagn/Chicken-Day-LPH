@@ -744,7 +744,7 @@ function updateKunciUI(){
   const inItem=document.getElementById('inItem');
   if(inOmzet)inOmzet.disabled=kunci;
   if(inItem)inItem.disabled=kunci;
-  hitungCocok();
+  if(!kunci){hitungCocok();}else{updateWASection();}
 }
 
 /* ---- unlock tanggal ---- */
