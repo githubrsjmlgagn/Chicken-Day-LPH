@@ -166,7 +166,17 @@ input,select,button{font-family:inherit;font-size:15px;}
 .db-loading{position:fixed;inset:0;background:var(--merah);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;color:#fff;}
 .db-loading .spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;margin-bottom:16px;}
 @keyframes spin{to{transform:rotate(360deg);}}
-.db-loading p{font-size:14px;opacity:.8;}
+header .kanan{display:flex;align-items:center;gap:8px;}
+.gear-btn{background:rgba(255,255,255,.16);border:none;color:#fff;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;}
+.gear-btn:active{background:rgba(255,255,255,.3);}
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:120;display:flex;justify-content:flex-end;}
+.panel-box{background:var(--bg);width:100%;max-width:420px;height:100%;display:flex;flex-direction:column;box-shadow:-6px 0 18px rgba(0,0,0,.18);animation:panelSlideIn .22s ease-out;}
+@keyframes panelSlideIn{from{transform:translateX(100%);}to{transform:translateX(0);}}
+.panel-head{background:var(--merah);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.panel-head h3{margin:0;font-size:16px;display:flex;align-items:center;gap:8px;}
+.panel-close{background:rgba(255,255,255,.16);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.panel-close:active{background:rgba(255,255,255,.3);}
+.panel-body{flex:1;overflow-y:auto;padding:14px;}
 </style>
 </head>
 <body>
@@ -182,8 +192,9 @@ input,select,button{font-family:inherit;font-size:15px;}
     <div class="judul">Chicken Day</div>
     <div class="tgl" id="headerStatusTgl">Input Penjualan</div>
   </div>
-  <div>
+  <div class="kanan">
     <input type="date" id="tglHari" class="tglpick">
+    <button class="gear-btn" onclick="bukaPin()" aria-label="Pengaturan"><i class="fi fi-rr-settings"></i></button>
   </div>
 </header>
 
@@ -191,7 +202,6 @@ input,select,button{font-family:inherit;font-size:15px;}
   <button id="tabInput" class="aktif" onclick="ganti('input')">Input</button>
   <button id="tabTrx" onclick="ganti('trx')">Transaksi <span id="trxCount"></span></button>
   <button id="tabRekap" onclick="ganti('rekap')">Pencocokan</button>
-  <button id="tabData" onclick="bukaPin()"><i class="fi fi-rr-settings"></i> Pengaturan</button>
 </div>
 
 <main>
@@ -301,59 +311,70 @@ input,select,button{font-family:inherit;font-size:15px;}
   </section>
 
   <!-- TAB PENGATURAN -->
-  <section id="vData" class="hidden">
-    <div class="data-section">
-      <h3><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal</h3>
-      <p>Tanggal yang sudah di-export terkunci otomatis. Pilih tanggal untuk membuka kuncinya agar bisa diedit kembali.</p>
-      <div class="unlock-wrap">
-        <input type="date" id="unlockTgl" onchange="cekStatusUnlock()">
-      </div>
-      <div class="unlock-info kosong" id="unlockInfo">Pilih tanggal untuk melihat statusnya.</div>
-      <button class="btn btn-garis" id="btnUnlock" style="border-color:var(--emas);color:#7a5a00;display:none" onclick="konfirmasiUnlock()"><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal Ini</button>
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-lock"></i> Ganti PIN</h3>
-      <p>PIN digunakan untuk mengunci halaman Pengaturan ini.</p>
-      <button class="btn btn-garis" onclick="gantiPIN()">Ganti PIN</button>
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-phone-call"></i> Nomor WhatsApp Admin</h3>
-      <p>Nomor ini digunakan untuk tombol kirim laporan di halaman Pencocokan. Format: angka saja tanpa tanda + atau strip, diawali kode negara.<br><small>Contoh: 6281234567890</small></p>
-      <div class="set-row">
-        <input type="tel" id="inputNomorWA" inputmode="numeric" placeholder="6281234567890">
-        <button class="btn btn-utama btn-sm" onclick="simpanNomorWA()">Simpan</button>
-      </div>
-      <div class="kecil" id="statusNomorWA"></div>
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-shop"></i> Nama Outlet</h3>
-      <p>Wajib diisi sesuai lokasi outlet ini. Otomatis ditambahkan ke nama file Excel, file backup, dan teks WhatsApp — supaya pusat tahu laporan ini dari outlet mana.</p>
-      <div class="set-row">
-        <input type="text" id="inputOutlet" placeholder="Contoh: Ampel">
-        <button class="btn btn-utama btn-sm" onclick="simpanNamaOutlet()">Simpan</button>
-      </div>
-      <div class="kecil" id="statusOutlet"></div>
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-cloud-download"></i> Backup Data</h3>
-      <p>Unduh seluruh data transaksi semua tanggal sebagai file .json. Simpan sebagai cadangan — bisa digunakan untuk restore jika data hilang.</p>
-      <button class="btn btn-hijau" onclick="backupJSON()">Unduh Backup (.json)</button>
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-folder-open"></i> Restore Data</h3>
-      <p>Muat data dari file backup .json. Data di-restore akan digabung dengan data yang sudah ada.</p>
-      <button class="btn btn-biru" onclick="document.getElementById('inputRestore').click()">Pilih File Backup (.json)</button>
-      <input type="file" id="inputRestore" accept=".json" style="display:none" onchange="restoreJSON(event)">
-    </div>
-    <div class="data-section">
-      <h3><i class="fi fi-rr-trash"></i> Hapus Semua Data</h3>
-      <p>Hapus <strong>seluruh</strong> data dari semua tanggal. Lakukan backup terlebih dahulu. Tidak bisa dibatalkan.</p>
-      <button class="btn btn-garis" style="border-color:var(--merahx);color:var(--merahx)" onclick="resetSemuaData()">Hapus Semua Data</button>
-    </div>
-  </section>
 </main>
 
+<!-- PANEL PENGATURAN (drawer dari kanan, diakses lewat ikon gerigi) -->
+<div class="panel-overlay hidden" id="panelSetting">
+  <div class="panel-box">
+    <div class="panel-head">
+      <h3><i class="fi fi-rr-settings"></i> Pengaturan</h3>
+      <button class="panel-close" onclick="tutupPengaturan()" aria-label="Tutup Pengaturan"><i class="fi fi-rr-cross-small"></i></button>
+    </div>
+    <div class="panel-body">
+      <div class="data-section">
+        <h3><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal</h3>
+        <p>Tanggal yang sudah di-export terkunci otomatis. Pilih tanggal untuk membuka kuncinya agar bisa diedit kembali.</p>
+        <div class="unlock-wrap">
+          <input type="date" id="unlockTgl" onchange="cekStatusUnlock()">
+        </div>
+        <div class="unlock-info kosong" id="unlockInfo">Pilih tanggal untuk melihat statusnya.</div>
+        <button class="btn btn-garis" id="btnUnlock" style="border-color:var(--emas);color:#7a5a00;display:none" onclick="konfirmasiUnlock()"><i class="fi fi-rr-lock-open"></i> Buka Kunci Tanggal Ini</button>
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-lock"></i> Ganti PIN</h3>
+        <p>PIN digunakan untuk mengunci panel Pengaturan ini.</p>
+        <button class="btn btn-garis" onclick="gantiPIN()">Ganti PIN</button>
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-phone-call"></i> Nomor WhatsApp Admin</h3>
+        <p>Nomor ini digunakan untuk tombol kirim laporan di halaman Pencocokan. Format: angka saja tanpa tanda + atau strip, diawali kode negara.<br><small>Contoh: 6281234567890</small></p>
+        <div class="set-row">
+          <input type="tel" id="inputNomorWA" inputmode="numeric" placeholder="6281234567890">
+          <button class="btn btn-utama btn-sm" onclick="simpanNomorWA()">Simpan</button>
+        </div>
+        <div class="kecil" id="statusNomorWA"></div>
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-shop"></i> Nama Outlet</h3>
+        <p>Wajib diisi sesuai lokasi outlet ini. Otomatis ditambahkan ke nama file Excel, file backup, dan teks WhatsApp — supaya pusat tahu laporan ini dari outlet mana.</p>
+        <div class="set-row">
+          <input type="text" id="inputOutlet" placeholder="Contoh: Ampel">
+          <button class="btn btn-utama btn-sm" onclick="simpanNamaOutlet()">Simpan</button>
+        </div>
+        <div class="kecil" id="statusOutlet"></div>
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-cloud-download"></i> Backup Data</h3>
+        <p>Unduh seluruh data transaksi semua tanggal sebagai file .json. Simpan sebagai cadangan — bisa digunakan untuk restore jika data hilang. Nama file bisa disesuaikan sebelum diunduh.</p>
+        <button class="btn btn-hijau" onclick="backupJSON()">Unduh Backup (.json)</button>
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-folder-open"></i> Restore Data</h3>
+        <p>Muat data dari file backup .json. Data di-restore akan digabung dengan data yang sudah ada.</p>
+        <button class="btn btn-biru" onclick="document.getElementById('inputRestore').click()">Pilih File Backup (.json)</button>
+        <input type="file" id="inputRestore" accept=".json" style="display:none" onchange="restoreJSON(event)">
+      </div>
+      <div class="data-section">
+        <h3><i class="fi fi-rr-trash"></i> Hapus Semua Data</h3>
+        <p>Hapus <strong>seluruh</strong> data dari semua tanggal. Lakukan backup terlebih dahulu. Tidak bisa dibatalkan.</p>
+        <button class="btn btn-garis" style="border-color:var(--merahx);color:var(--merahx)" onclick="resetSemuaData()">Hapus Semua Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
+
 
 <!-- MODAL PIN -->
 <div class="pin-overlay hidden" id="pinOverlay">
@@ -967,18 +988,28 @@ async function exportExcel(){
 async function backupJSON(){
   const allKeys=await dbGetAllKeys();
   if(!allKeys.length){toast('Tidak ada data untuk dibackup');return;}
-  const ok=await showConfirm({title:'Unduh Backup?',message:`Unduh backup ${allKeys.length} hari data ke file .json?`,confirmText:'Unduh'});
-  if(!ok)return;
+  const outlet=getNamaOutlet();
+  const defNama=`backup_CD_${outlet?outlet+'_':''}${todayStr()}`;
+  const namaInput=await showConfirm({
+    title:'Unduh Backup?',
+    message:`Backup akan mencakup ${allKeys.length} hari data. Sesuaikan nama file jika perlu, lalu tekan Unduh Backup.`,
+    inputDefault:defNama,
+    inputPlaceholder:'Nama file',
+    confirmText:'Unduh Backup'
+  });
+  if(namaInput===null)return;
+  let nama=namaInput.trim()||defNama;
+  nama=nama.replace(/[\/\\:*?"<>|]/g,'-');
+  if(!/\.json$/i.test(nama))nama+='.json';
   const allData=await dbGetAll();
-  const backup={versi:2,dibuat:new Date().toISOString(),outlet:getNamaOutlet()||'Chicken Day',data:{}};
+  const backup={versi:2,dibuat:new Date().toISOString(),outlet:outlet||'Chicken Day',data:{}};
   allData.forEach(s=>{backup.data[s.tanggal]=s;});
   const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  const outlet=getNamaOutlet();
-  a.href=url;a.download=`backup_CD_${outlet?outlet+'_':''}${todayStr()}.json`;a.click();URL.revokeObjectURL(url);
+  a.href=url;a.download=nama;a.click();URL.revokeObjectURL(url);
   localStorage.setItem(LAST_BACKUP_KEY,Date.now().toString());
-  toast(`Backup diunduh (${allKeys.length} hari)`);
+  toast(`✓ Backup diunduh: ${nama}`);
 }
 
 async function restoreJSON(event){
@@ -1101,7 +1132,7 @@ function prosesPIN(){
   }else if(pinMode==='konfirmasi'){
     if(pinBuffer===pinSementara){
       localStorage.setItem(PIN_KEY,pinBuffer);
-      tutupPin();ganti('data');toast('PIN berhasil dibuat ✓');
+      tutupPin();bukaPengaturan();toast('PIN berhasil dibuat ✓');
     }else{
       document.getElementById('pinErr').textContent='PIN tidak sama, ulangi';
       renderPinSalah();
@@ -1114,7 +1145,7 @@ function prosesPIN(){
     }
   }else if(pinMode==='buka'){
     if(pinBuffer===getPIN()){
-      pinCoba=0;tutupPin();ganti('data');
+      pinCoba=0;tutupPin();bukaPengaturan();
       if(pinTujuan==='nomorWA')setTimeout(()=>document.getElementById('inputNomorWA').focus(),200);
     }else{
       pinCoba++;renderPinSalah();
@@ -1140,7 +1171,7 @@ function gantiPIN(){
 
 /* ---- tab switching ---- */
 function ganti(tab){
-  ['input','trx','rekap','data'].forEach(t=>{
+  ['input','trx','rekap'].forEach(t=>{
     document.getElementById('v'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('hidden',t!==tab);
     const btn=document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1));
     if(btn)btn.classList.toggle('aktif',t===tab);
@@ -1148,15 +1179,24 @@ function ganti(tab){
   if(tab==='input')updateKunciUI();
   if(tab==='trx')renderTrx();
   if(tab==='rekap')renderRekap();
-  if(tab==='data'){
-    const nomor=getNomorWA();
-    document.getElementById('inputNomorWA').value=nomor;
-    if(nomor)document.getElementById('statusNomorWA').textContent='✓ Tersimpan: '+nomor;
-    const outlet=getNamaOutlet();
-    document.getElementById('inputOutlet').value=outlet;
-    if(outlet)document.getElementById('statusOutlet').textContent='✓ Tersimpan: '+outlet;
-  }
 }
+
+/* ---- panel Pengaturan (drawer, terpisah dari tab utama) ---- */
+function bukaPengaturan(){
+  const nomor=getNomorWA();
+  document.getElementById('inputNomorWA').value=nomor;
+  document.getElementById('statusNomorWA').textContent=nomor?'✓ Tersimpan: '+nomor:'';
+  const outlet=getNamaOutlet();
+  document.getElementById('inputOutlet').value=outlet;
+  document.getElementById('statusOutlet').textContent=outlet?'✓ Tersimpan: '+outlet:'';
+  document.getElementById('panelSetting').classList.remove('hidden');
+}
+function tutupPengaturan(){
+  document.getElementById('panelSetting').classList.add('hidden');
+}
+document.getElementById('panelSetting').addEventListener('click',e=>{
+  if(e.target.id==='panelSetting')tutupPengaturan();
+});
 
 /* ---- toast ---- */
 let toastTimer=null;
