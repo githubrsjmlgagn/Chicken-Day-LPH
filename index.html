@@ -534,6 +534,14 @@ function simpanNamaOutlet(){
 
 /* ---- load & save (async, pakai IndexedDB) ---- */
 async function load(tgl){
+  // Flush perubahan "struk" yang masih ditunda (debounce) sebelum state diganti —
+  // mencegah data hilang atau tertulis ke tanggal yang salah saat user pindah
+  // tanggal/restore/reset tepat saat masih mengetik di tab Pencocokan.
+  if(_strukSaveTimer){
+    clearTimeout(_strukSaveTimer);
+    _strukSaveTimer=null;
+    await save();
+  }
   const raw=await dbGet(tgl);
   if(raw){
     state=raw;
@@ -798,11 +806,15 @@ function renderRekap(){
   document.getElementById('inItem').value=state.struk.item||'';
   updateWASection();hitungCocok();
 }
-async function hitungCocok(){
+let _strukSaveTimer=null;
+function hitungCocok(){
   const o=document.getElementById('inOmzet').value.replace(/\./g,'');
   const it=document.getElementById('inItem').value;
   state.struk={omzet:o,item:it};
-  await save();
+  // Debounce: tulis ke IndexedDB 400ms setelah user berhenti mengetik,
+  // bukan di setiap keystroke (lihat load() untuk logic flush-nya).
+  clearTimeout(_strukSaveTimer);
+  _strukSaveTimer=setTimeout(()=>{_strukSaveTimer=null;save();},400);
   const box=document.getElementById('hasilCocok');
   const det=document.getElementById('selisihDetail');
   const appO=totalOmzet(),appI=totalItem();
