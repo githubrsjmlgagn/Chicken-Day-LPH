@@ -877,13 +877,30 @@ function hitungCocok(){
   const o=document.getElementById('inOmzet').value.replace(/\./g,'');
   const it=document.getElementById('inItem').value;
   state.struk={omzet:o,item:it};
-  // Debounce: tulis ke IndexedDB 400ms setelah user berhenti mengetik,
-  // bukan di setiap keystroke (lihat load() untuk logic flush-nya).
   clearTimeout(_strukSaveTimer);
   _strukSaveTimer=setTimeout(()=>{_strukSaveTimer=null;save();},400);
   const box=document.getElementById('hasilCocok');
   const det=document.getElementById('selisihDetail');
   const appO=totalOmzet(),appI=totalItem();
+  // Jika terkunci: hanya tampilkan status cocok, jangan aktifkan tombol apapun
+  if(isTerkunci()){
+    if(o===''||it===''){box.className='cocok netral';box.textContent='Isi kedua angka dari struk';det.textContent='';}
+    else{
+      const dO=appO-(+o),dI=appI-(+it);
+      if(dO===0&&dI===0){box.className='cocok ok';box.textContent='✓ Cocok semua';det.textContent='';}
+      else{
+        box.className='cocok beda';box.textContent='✗ Belum cocok';
+        let p=[];
+        if(dO!==0)p.push(`Omzet selisih ${rp(Math.abs(dO))} (${dO>0?'aplikasi lebih besar':'aplikasi lebih kecil'})`);
+        if(dI!==0)p.push(`Item selisih ${Math.abs(dI)} (${dI>0?'aplikasi lebih banyak':'aplikasi lebih sedikit'})`);
+        det.textContent=p.join(' · ');
+      }
+    }
+    setExport(false);
+    const btnWA=document.getElementById('btnKirimWA');
+    if(btnWA){btnWA.disabled=true;btnWA.style.opacity='0.5';btnWA.style.cursor='not-allowed';}
+    return;
+  }
   if(o===''||it===''){box.className='cocok netral';box.textContent='Isi kedua angka dari struk';det.textContent='';setExport(false);updateWASection();return;}
   const dO=appO-(+o),dI=appI-(+it);
   if(dO===0&&dI===0){
