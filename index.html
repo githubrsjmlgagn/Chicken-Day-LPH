@@ -678,7 +678,7 @@ async function simpanNota(){
   state.exported=false;
   tambahFrekuensi(items);
   await save();
-  keranjang={};renderKeranjang();renderTrx();updateHeaderInfo();updateStatusHeader();
+  keranjang={};renderKeranjang();renderTrx();updateHeaderInfo();updateStatusHeader();updateKunciUI();
   toast('Nota tersimpan ✓');
 }
 
@@ -708,7 +708,7 @@ async function hapusTrx(i){
   const ok=await showConfirm({title:'Hapus Nota?',message:`Hapus nota #${i+1}? Tindakan ini tidak bisa dibatalkan.`,confirmText:'Hapus',danger:true});
   if(!ok)return;
   state.trx.splice(i,1);state.exported=false;
-  await save();renderTrx();updateHeaderInfo();updateStatusHeader();
+  await save();renderTrx();updateHeaderInfo();updateStatusHeader();updateKunciUI();
   toast('Nota dihapus');
 }
 
@@ -801,7 +801,7 @@ async function simpanEdit(){
   }
   state.exported=false;
   await save();
-  tutupModal();renderTrx();updateHeaderInfo();updateStatusHeader();
+  tutupModal();renderTrx();updateHeaderInfo();updateStatusHeader();updateKunciUI();
   toast('Nota diperbarui ✓');
 }
 
@@ -959,7 +959,7 @@ async function exportExcel(){
   XLSX.writeFile(wb,nama);
   state.exported=true;
   await save();
-  updateStatusHeader();updateWASection();
+  updateStatusHeader();updateWASection();updateKunciUI();renderTrx();
   toast('✓ Excel diunduh: '+nama);
 }
 
@@ -1145,6 +1145,7 @@ function ganti(tab){
     const btn=document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1));
     if(btn)btn.classList.toggle('aktif',t===tab);
   });
+  if(tab==='input')updateKunciUI();
   if(tab==='trx')renderTrx();
   if(tab==='rekap')renderRekap();
   if(tab==='data'){
