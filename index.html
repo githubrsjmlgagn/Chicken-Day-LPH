@@ -145,9 +145,6 @@ main{padding:16px;max-width:560px;margin:0 auto;padding-bottom:90px;}
 }
 .chan button.aktif{background:var(--merah);color:#fff;border-color:var(--merah);}
 #chOjol.aktif,#modalChOjol.aktif{background:var(--hijau);border-color:var(--hijau);}
-.chan-info{font-size:11px;font-weight:600;padding:5px 10px;border-radius:var(--r-xs);margin-bottom:8px;text-align:center;}
-.chan-info.reguler{background:var(--garis2);color:var(--abu);}
-.chan-info.ojol{background:var(--hijau-soft);color:var(--hijau);}
 
 /* ---- Menu items ---- */
 .hasil{display:flex;flex-direction:column;gap:6px;}
@@ -521,7 +518,6 @@ main{padding:16px;max-width:560px;margin:0 auto;padding-bottom:90px;}
           <button id="chReguler" class="aktif" onclick="setChannel(0)">Reguler</button>
           <button id="chOjol" onclick="setChannel(1)">Ojol (G)</button>
         </div>
-        <div class="chan-info reguler" id="chanInfo">Channel aktif: <b>Reguler</b></div>
       </div>
       <div class="keranjang" id="keranjangWrap" style="display:none">
         <h3>Nota berjalan</h3>
@@ -921,9 +917,6 @@ function setChannel(c){
   channel=c;
   document.getElementById('chReguler').classList.toggle('aktif',c===0);
   document.getElementById('chOjol').classList.toggle('aktif',c===1);
-  const info=document.getElementById('chanInfo');
-  info.innerHTML='Channel aktif: <b>'+(c===0?'Reguler':'Ojol (G)')+'</b>';
-  info.className='chan-info '+(c===0?'reguler':'ojol');
   renderHasil();
 }
 
