@@ -67,20 +67,17 @@ header{
   padding:8px 16px;
   gap:8px;
 }
-header .judul{font-weight:700;font-size:17px;letter-spacing:-.2px;}
+header .judul{font-weight:700;font-size:17px;letter-spacing:-.2px;color:var(--emas);}
 header .subtgl{font-size:12px;color:rgba(255,255,255,.65);margin-top:1px;}
-.header-bot-label{font-size:11px;color:rgba(255,255,255,.6);font-weight:500;}
 .header-bot-right{display:flex;align-items:center;gap:8px;}
+.tgl-display-wrap{position:relative;display:inline-flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;min-height:32px;}
+.tgl-display-text{font-size:13px;font-weight:500;}
 .tglpick{
-  padding:5px 10px;
-  border:1px solid rgba(255,255,255,.25);
-  background:rgba(255,255,255,.12);
-  color:#fff;
-  border-radius:var(--r-xs);
-  font-size:13px;
-  font-weight:500;
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  width:100%;height:100%;margin:0;padding:0;
+  opacity:0;border:none;background:none;color:#fff;
+  cursor:pointer;z-index:1;
 }
-.tglpick::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.7);}
 .gear-btn{
   background:rgba(255,255,255,.14);
   border:1px solid rgba(255,255,255,.2);
@@ -306,8 +303,8 @@ main{padding:16px;max-width:560px;margin:0 auto;padding-bottom:90px;}
 .wa-step b{color:var(--hijau);}
 
 /* ---- Export badge (header status) ---- */
-.export-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;}
-.export-badge.sudah{background:rgba(255,255,255,.2);color:rgba(255,255,255,.9);}
+.export-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;}
+.export-badge.sudah{background:rgba(255,255,255,.2);color:var(--emas);}
 .export-badge.belum{background:rgba(255,255,255,.12);color:rgba(255,255,255,.6);}
 
 /* ---- Toast ---- */
@@ -477,12 +474,15 @@ main{padding:16px;max-width:560px;margin:0 auto;padding-bottom:90px;}
     <div>
       <div class="judul">Chicken Day</div>
     </div>
-    <div id="headerStatusTgl" style="font-size:12px;color:rgba(255,255,255,.7);font-weight:500;">Input Penjualan</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.7);font-weight:500;">Input Penjualan</div>
   </div>
   <div class="header-bot">
-    <span class="header-bot-label">Tanggal input</span>
+    <div class="tgl-display-wrap" id="tglDisplayWrap" aria-label="Ganti tanggal input">
+      <span id="tglDisplayText" class="tgl-display-text">—</span>
+      <span id="statusBadgeInline"></span>
+      <input type="date" id="tglHari" class="tglpick" aria-label="Pilih tanggal input">
+    </div>
     <div class="header-bot-right">
-      <input type="date" id="tglHari" class="tglpick">
       <button class="gear-btn" onclick="bukaPin()" aria-label="Pengaturan"><i class="fi fi-rr-settings"></i></button>
     </div>
   </div>
@@ -856,6 +856,8 @@ function chClass(ch){return ch===1?'ch-ojol':'ch-reguler';}
 function formatRibuan(el){const raw=el.value.replace(/\D/g,'');el.value=raw?Number(raw).toLocaleString('id-ID'):'';}
 function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtTglPanjang(tgl){const[y,m,d]=tgl.split('-');const bln=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];return `${+d} ${bln[+m-1]} ${y}`;}
+function namaHari(tgl){const hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];return hari[new Date(tgl+'T00:00:00').getDay()];}
+function fmtTglHeader(tgl){return namaHari(tgl)+', '+fmtTglPanjang(tgl);}
 
 function getNomorWA(){return localStorage.getItem('cda_nomor_wa')||'';}
 function simpanNomorWA(){
@@ -905,12 +907,13 @@ async function save(){
 
 /* ---- header status ---- */
 function updateStatusHeader(){
-  const el=document.getElementById('headerStatusTgl');
-  if(!state.trx.length){el.innerHTML='Input Penjualan';return;}
-  const badge=state.exported
-    ?'<span class="export-badge sudah"><i class="fi fi-rr-badge-check"></i> Sudah Export</span>'
-    :'<span class="export-badge belum">● Belum Export</span>';
-  el.innerHTML='Input Penjualan '+badge;
+  document.getElementById('tglDisplayText').textContent=fmtTglHeader(state.tanggal);
+  const badgeEl=document.getElementById('statusBadgeInline');
+  if(!state.trx.length){badgeEl.innerHTML='';return;}
+  badgeEl.className='export-badge '+(state.exported?'sudah':'belum');
+  badgeEl.innerHTML=state.exported
+    ?'<i class="fi fi-rr-badge-check"></i> Sudah Export'
+    :'● Belum Export';
 }
 
 /* ---- pencarian ---- */
@@ -1602,6 +1605,14 @@ function updateBannerSetup(){
 document.getElementById('cari').addEventListener('input',renderHasil);
 
 /* ---- date picker ---- */
+document.getElementById('tglDisplayWrap').addEventListener('click',function(){
+  const inp=document.getElementById('tglHari');
+  if(typeof inp.showPicker==='function'){
+    try{inp.showPicker();}catch(e){inp.focus();}
+  }else{
+    inp.focus();
+  }
+});
 document.getElementById('tglHari').addEventListener('change',async function(){
   const tglBaru=this.value;
   if(Object.keys(keranjang).length>0){
